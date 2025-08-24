@@ -33,7 +33,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateContractUseCaseTest {
+class UpdateContractUseCaseImplTest {
 
     @Mock
     private ContractRepository contractRepository;

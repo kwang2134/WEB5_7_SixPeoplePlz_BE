@@ -8,7 +8,6 @@ import me.jinjjahalgae.domain.proof.usecase.get.await.GetAwaitProofUseCaseImpl;
 import me.jinjjahalgae.domain.proof.usecase.get.await.dto.ProofAwaitResponse;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,9 +50,9 @@ class GetAwaitProofUseCaseUnitTest {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime()),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime()),
-                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime())
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.APPROVED, contractId, null, Instant.now()),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.APPROVED, contractId, null, Instant.now()),
+                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVED, contractId, null, Instant.now())
         );
 
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);

@@ -19,9 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +31,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 @ExtendWith(MockitoExtension.class)
-class GetContractDetailUseCaseTest {
+class GetContractDetailUseCaseImplTest {
 
     @Mock
     private ContractRepository contractRepository;
@@ -86,8 +86,8 @@ class GetContractDetailUseCaseTest {
         // 계약 생성
         contractWithParticipants = Contract.builder()
                 .user(contractor)
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .title("운동하기")
                 .goal("매일 30분 운동")
                 .penalty("치킨 못 먹기")
@@ -97,14 +97,12 @@ class GetContractDetailUseCaseTest {
                 .type(ContractType.BASIC)
                 .build();
 
-        // 리플렉션으로 ID 설정
-        try {
-            java.lang.reflect.Field idField = Contract.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(contractWithParticipants, contractId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        // ReflectionTestUtils를 사용하여 ID와 필요한 필드들 설정
+        ReflectionTestUtils.setField(contractWithParticipants, "id", contractId);
+        ReflectionTestUtils.setField(contractWithParticipants, "uuid", "uuid-123");
+        ReflectionTestUtils.setField(contractWithParticipants, "currentProof", 0);
+        ReflectionTestUtils.setField(contractWithParticipants, "totalSupervisor", 3);
+        ReflectionTestUtils.setField(contractWithParticipants, "status", ContractStatus.PENDING);
 
         // ContractBasicResponse 생성
         ContractBasicResponse contractBasicResponse = new ContractBasicResponse(
@@ -114,9 +112,10 @@ class GetContractDetailUseCaseTest {
                 "매일 30분 운동",
                 "치킨 못 먹기",
                 "치킨 먹기",
+                false,
                 10,
-                LocalDateTime.now().toInstant(ZoneOffset.UTC),
-                LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC)
+                contractWithParticipants.getStartDate(),
+                contractWithParticipants.getEndDate()
         );
 
         // 참여자 정보 (계약자 1명 + 감독자 3명)
@@ -124,7 +123,7 @@ class GetContractDetailUseCaseTest {
                 contractBasicResponse,
                 ContractStatus.PENDING,
                 0,
-                "0/12",
+                "0/10",
                 "1/31",
                 0.0,
                 3.2,
@@ -141,7 +140,8 @@ class GetContractDetailUseCaseTest {
                         new ParticipantSimpleResponse(
                                 4L, "감독자3", Role.SUPERVISOR, true
                         )
-                )
+                ),
+                false
         );
     }
 
@@ -153,7 +153,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(Optional.of(contractWithParticipants));
         given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, userId))
                 .willReturn(true);
-        given(contractMapper.toDetailResponse(contractWithParticipants))
+        given(contractMapper.toDetailResponse(contractWithParticipants, false))
                 .willReturn(expectedResponse);
 
         // When
@@ -197,7 +197,7 @@ class GetContractDetailUseCaseTest {
 
         verify(contractRepository).findById(contractId);
         verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, userId);
-        verify(contractMapper).toDetailResponse(contractWithParticipants);
+        verify(contractMapper).toDetailResponse(contractWithParticipants, false);
     }
 
     @Test
@@ -217,9 +217,10 @@ class GetContractDetailUseCaseTest {
                 "매일 30분 운동",
                 "치킨 못 먹기",
                 "치킨 먹기",
+                false,
                 10,
-                LocalDateTime.now().toInstant(ZoneOffset.UTC),
-                LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC)
+                contractWithParticipants.getStartDate(),
+                contractWithParticipants.getEndDate()
         );
 
         // valid=false인 감독자가 포함되지 않은 응답 (필터링된 결과)
@@ -227,7 +228,7 @@ class GetContractDetailUseCaseTest {
                 contractBasicResponse,
                 ContractStatus.PENDING,
                 3,
-                "0/12",
+                "0/10",
                 "1/31",
                 0.0,
                 3.2,
@@ -241,14 +242,15 @@ class GetContractDetailUseCaseTest {
                         new ParticipantSimpleResponse(
                                 3L, "감독자2", Role.SUPERVISOR, true
                         )
-                )
+                ),
+                false
         );
 
         given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contractWithParticipants));
         given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, userId))
                 .willReturn(true);
-        given(contractMapper.toDetailResponse(contractWithParticipants))
+        given(contractMapper.toDetailResponse(contractWithParticipants, false))
                 .willReturn(responseWithValidParticipantsOnly);
 
         // When
@@ -263,7 +265,7 @@ class GetContractDetailUseCaseTest {
 
         verify(contractRepository).findById(contractId);
         verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, userId);
-        verify(contractMapper).toDetailResponse(contractWithParticipants);
+        verify(contractMapper).toDetailResponse(contractWithParticipants, false);
     }
 
     @Test
@@ -275,7 +277,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(Optional.of(contractWithParticipants));
         given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, supervisorId))
                 .willReturn(true);
-        given(contractMapper.toDetailResponse(contractWithParticipants))
+        given(contractMapper.toDetailResponse(contractWithParticipants, false))
                 .willReturn(expectedResponse);
 
         // When
@@ -287,7 +289,7 @@ class GetContractDetailUseCaseTest {
 
         verify(contractRepository).findById(contractId);
         verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, supervisorId);
-        verify(contractMapper).toDetailResponse(contractWithParticipants);
+        verify(contractMapper).toDetailResponse(contractWithParticipants, false);
     }
 
     @Test

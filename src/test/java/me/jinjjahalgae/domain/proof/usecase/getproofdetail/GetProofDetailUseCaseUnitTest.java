@@ -8,7 +8,6 @@ import me.jinjjahalgae.domain.proof.usecase.get.detail.GetProofDetailUseCaseImpl
 import me.jinjjahalgae.domain.proof.usecase.get.detail.dto.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +48,7 @@ class GetProofDetailUseCaseUnitTest {
     @DisplayName("인증 상세 조회 성공")
     void getProofDetail_Success() {
         // given
-        Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime());
+        Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, Instant.now());
 
         when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.of(proof));
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
@@ -76,7 +76,7 @@ class GetProofDetailUseCaseUnitTest {
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생")
     void getProofDetail_ThrowsException_WhenNotParticipant() {
         // given
-        Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime());
+        Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, Instant.now());
 
         when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.of(proof));
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(false);

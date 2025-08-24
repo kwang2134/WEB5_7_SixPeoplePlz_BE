@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class ContractTitleInfoUseCaseTest {
+class GetContractTitleInfoUseCaseImplTest {
 
     @Mock
     private ContractRepository contractRepository;
@@ -54,8 +56,8 @@ class ContractTitleInfoUseCaseTest {
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
                 .totalProof(21)
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .type(ContractType.BASIC)
                 .oneOff(false)
                 .build();

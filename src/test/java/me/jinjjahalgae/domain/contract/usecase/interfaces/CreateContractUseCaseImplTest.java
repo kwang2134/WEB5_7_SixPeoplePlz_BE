@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -49,6 +50,9 @@ class CreateContractUseCaseImplTest {
     void givenContractInfo_whenCreatingContract_thenReturnsCreatedContractInfo() {
         // Arrange (준비): 테스트 시나리오를 설정
         Long userId = 1L;
+        Instant startDate = LocalDateTime.of(2025, 1, 1, 0, 0, 0).toInstant(ZoneOffset.UTC);
+        Instant endDate = LocalDateTime.of(2025, 1, 31, 23, 59, 59).toInstant(ZoneOffset.UTC);
+        
         CreateContractRequest request = new CreateContractRequest(
                 "매일 운동하기", // title
                 "매일 30분 이상 운동하기", // goal
@@ -56,8 +60,8 @@ class CreateContractUseCaseImplTest {
                 "치킨 먹기", // reward
                 10, // totalProof
                 false, // oneOff
-                LocalDateTime.of(2025, 1, 1, 0, 0, 0).toInstant(ZoneOffset.UTC), // startDate
-                LocalDateTime.of(2025, 1, 31, 23, 59, 59).toInstant(ZoneOffset.UTC), // endDate
+                startDate, // startDate
+                endDate, // endDate
                 ContractType.BASIC, // type
                 "signature.jpg" // signatureImageKey
         );
@@ -71,8 +75,8 @@ class CreateContractUseCaseImplTest {
 
         Contract fakeContract = Contract.builder()
                 .user(fakeUser)
-                .startDate(LocalDateTime.of(2025, 1, 1, 0, 0, 0))
-                .endDate(LocalDateTime.of(2025, 1, 31, 23, 59, 59))
+                .startDate(startDate)
+                .endDate(endDate)
                 .title("매일 운동하기")
                 .goal("매일 30분 이상 운동하기")
                 .penalty("치킨 못 먹기")

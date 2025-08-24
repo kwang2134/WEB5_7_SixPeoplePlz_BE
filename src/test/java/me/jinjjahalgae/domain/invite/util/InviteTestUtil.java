@@ -5,8 +5,10 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class InviteTestUtil {
 
@@ -22,8 +24,8 @@ public class InviteTestUtil {
     public static Contract createContract(Long id, User contractor) {
         Contract contract = Contract.builder()
                 .user(contractor)
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .title("Test Contract " + id)
                 .goal("Test Goal")
                 .penalty("Test Penalty")
@@ -37,6 +39,8 @@ public class InviteTestUtil {
 
         ReflectionTestUtils.setField(contract, "id", id);
         ReflectionTestUtils.setField(contract, "uuid", "contract-uuid-" + id);
+        ReflectionTestUtils.setField(contract, "currentProof", 0);
+        ReflectionTestUtils.setField(contract, "totalSupervisor", 0);
         return contract;
     }
 

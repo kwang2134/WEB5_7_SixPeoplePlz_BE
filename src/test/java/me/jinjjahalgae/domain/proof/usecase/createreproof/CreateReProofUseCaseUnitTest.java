@@ -11,7 +11,6 @@ import me.jinjjahalgae.domain.proof.usecase.create.CreateProofUseCaseImpl;
 import me.jinjjahalgae.domain.proof.usecase.create.dto.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -56,7 +56,7 @@ class CreateReProofUseCaseUnitTest {
     void setUp() {
         validRequest = new ProofCreateRequest("image1.jpg", "image2.jpg", null, "테스트 코멘트");
 
-        existingProof = ProofTestUtil.createProof(proofId, "원본 인증", ProofStatus.REJECTED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime());
+        existingProof = ProofTestUtil.createProof(proofId, "원본 인증", ProofStatus.REJECTED, contractId, null, Instant.now());
 
         contract = ProofTestUtil.createContract(contractId, 3);
     }

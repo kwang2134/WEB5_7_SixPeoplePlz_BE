@@ -19,7 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,14 +61,14 @@ class GetSupervisorProofListUseCaseUnitTest {
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Long> reProofIds = Arrays.asList(4L, 5L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0)),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0)),
-                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0))
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         List<Proof> reProofs = Arrays.asList(
-                ProofTestUtil.createProof(4L, "재인증1", ProofStatus.APPROVED, contractId, 1L, LocalDateTime.of(year, month, 2, 0, 0)),
-                ProofTestUtil.createProof(5L, "재인증2", ProofStatus.APPROVE_PENDING, contractId, 2L, LocalDateTime.of(year, month, 3, 0, 0))
+                ProofTestUtil.createProof(4L, "재인증1", ProofStatus.APPROVED, contractId, 1L, LocalDateTime.of(year, month, 2, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(5L, "재인증2", ProofStatus.APPROVE_PENDING, contractId, 2L, LocalDateTime.of(year, month, 3, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         List<Feedback> feedbacks = Arrays.asList(
@@ -124,9 +126,9 @@ class GetSupervisorProofListUseCaseUnitTest {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0)),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0)),
-                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0))
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         List<Feedback> feedbacks = Arrays.asList(
@@ -155,9 +157,9 @@ class GetSupervisorProofListUseCaseUnitTest {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0)),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0)),
-                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0))
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(year, month, 2, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(year, month, 3, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);

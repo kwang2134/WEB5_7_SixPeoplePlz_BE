@@ -9,14 +9,14 @@ import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.user.User;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class ProofTestUtil {
 
-    public static Proof createProof(Long id, String comment, ProofStatus status, Long contractId, Long proofId, LocalDateTime date) {
+    public static Proof createProof(Long id, String comment, ProofStatus status, Long contractId, Long proofId, Instant date) {
         Proof proof = Proof.builder()
                 .comment(comment)
                 .status(status)
@@ -32,8 +32,8 @@ public class ProofTestUtil {
 
     public static Contract createContract(Long id, int totalSupervisor) {
         Contract cont = Contract.builder()
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .title("Test Contract " + id)
                 .goal("Test Goal")
                 .penalty("Test Penalty")
@@ -47,6 +47,8 @@ public class ProofTestUtil {
 
         ReflectionTestUtils.setField(cont, "id", id);
         ReflectionTestUtils.setField(cont, "totalSupervisor", totalSupervisor);
+        ReflectionTestUtils.setField(cont, "currentProof", 0);
+        ReflectionTestUtils.setField(cont, "uuid", "contract-uuid-" + id);
 
         return cont;
     }
@@ -68,8 +70,8 @@ public class ProofTestUtil {
     // ------------------------------------------ slice test ----------------------------------------------
     public static Contract createContractBeforeSave(int totalSupervisor, User user) {
         Contract cont = Contract.builder()
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .title("Test Contract ")
                 .goal("Test Goal")
                 .penalty("Test Penalty")

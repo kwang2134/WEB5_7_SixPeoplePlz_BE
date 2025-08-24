@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,9 +54,9 @@ class GetRecentProofUseCaseUnitTest {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 1, 0, 0)),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 2, 0, 0)),
-                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(2025, 7, 3, 0, 0))
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 1, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 2, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(3L, "인증3", ProofStatus.APPROVE_PENDING, contractId, null, LocalDateTime.of(2025, 7, 3, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
@@ -101,8 +103,8 @@ class GetRecentProofUseCaseUnitTest {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L);
         List<Proof> proofs = Arrays.asList(
-                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 1, 0, 0)),
-                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 2, 0, 0))
+                ProofTestUtil.createProof(1L, "인증1", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 1, 0, 0).toInstant(ZoneOffset.UTC)),
+                ProofTestUtil.createProof(2L, "인증2", ProofStatus.REJECTED, contractId, null, LocalDateTime.of(2025, 7, 2, 0, 0).toInstant(ZoneOffset.UTC))
         );
 
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);

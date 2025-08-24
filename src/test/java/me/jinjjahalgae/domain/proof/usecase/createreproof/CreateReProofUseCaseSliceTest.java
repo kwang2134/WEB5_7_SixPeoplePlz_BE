@@ -8,8 +8,8 @@ import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
-import me.jinjjahalgae.domain.proof.usecase.create.reproof.CreateReProofUseCaseImpl;
+import me.jinjjahalgae.domain.proof.usecase.create.CreateProofUseCaseImpl;
+import me.jinjjahalgae.domain.proof.usecase.create.dto.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
@@ -29,13 +29,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import(CreateReProofUseCaseImpl.class)
+@Import(CreateProofUseCaseImpl.class)
 @Transactional
 @ActiveProfiles("test")
 class CreateReProofUseCaseSliceTest {
 
     @Autowired
-    CreateReProofUseCaseImpl createReProofUseCase;
+    CreateProofUseCaseImpl createReProofUseCase;
 
     @Autowired
     ProofRepository proofRepository;

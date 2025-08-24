@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
+import me.jinjjahalgae.domain.proof.usecase.create.dto.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.usecase.get.await.dto.ProofAwaitResponse;
 import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.dto.ContractorProofListResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.detail.dto.ProofDetailResponse;

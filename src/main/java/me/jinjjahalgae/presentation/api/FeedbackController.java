@@ -26,7 +26,7 @@ public class FeedbackController implements FeedbackControllerDocs {
         @PathVariable("proofId") Long proofId,
         @Valid @RequestBody CreateFeedbackRequest request
     ) {
-        createFeedbackUseCase.execute(user.getUserId(), proofId, request);
+        createFeedbackUseCase.createFeedback(user.getUserId(), proofId, request);
 
         return CommonResponse.success();
     }

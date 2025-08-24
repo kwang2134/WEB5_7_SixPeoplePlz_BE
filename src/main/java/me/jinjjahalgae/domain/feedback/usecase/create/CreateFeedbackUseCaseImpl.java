@@ -31,7 +31,7 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
      */
     @Override
     @Transactional
-    public void execute(Long userId, Long proofId, CreateFeedbackRequest req) {
+    public void createFeedback(Long userId, Long proofId, CreateFeedbackRequest req) {
         // 인증 유효성 검사 (존재하지 않는 인증이면 예외)
         Proof proof = proofRepository.findById(proofId)
                 .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException("존재하지 않는 인증입니다.proofId=" + proofId));

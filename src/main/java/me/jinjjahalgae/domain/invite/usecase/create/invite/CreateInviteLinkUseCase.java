@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkRespons
 import me.jinjjahalgae.domain.user.User;
 
 public interface CreateInviteLinkUseCase {
-    InviteLinkResponse execute(Long contractId, User user);
+    InviteLinkResponse createInviteLink(Long contractId, User user);
 }

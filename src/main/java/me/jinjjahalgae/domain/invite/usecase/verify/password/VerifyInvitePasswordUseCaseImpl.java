@@ -18,7 +18,7 @@ public class VerifyInvitePasswordUseCaseImpl implements VerifyInvitePasswordUseC
     private final ObjectMapper objectMapper;
 
     @Override
-    public ContractUuidResponse execute(String inviteCode, VerifyInvitePasswordRequest request) {
+    public ContractUuidResponse verifyInvitePassword(String inviteCode, VerifyInvitePasswordRequest request) {
         Object data = redisTemplate.opsForValue().get(inviteCode);
 
         // 초대 정보가 존재하는지 확인

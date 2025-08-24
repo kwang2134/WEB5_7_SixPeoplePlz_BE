@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.VerifyInvitePas
 import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.ContractUuidResponse;
 
 public interface VerifyInvitePasswordUseCase {
-    ContractUuidResponse execute(String inviteCode, VerifyInvitePasswordRequest request);
+    ContractUuidResponse verifyInvitePassword(String inviteCode, VerifyInvitePasswordRequest request);
 }

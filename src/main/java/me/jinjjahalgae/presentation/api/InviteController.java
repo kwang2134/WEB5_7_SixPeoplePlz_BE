@@ -35,7 +35,7 @@ public class InviteController implements InviteControllerDocs {
     public CommonResponse<InviteLinkResponse> createInviteLink(
             @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
-        InviteLinkResponse result = createInviteLinkUseCase.execute(contractId, principal.getUser());
+        InviteLinkResponse result = createInviteLinkUseCase.createInviteLink(contractId, principal.getUser());
         return CommonResponse.success(result);
     }
 
@@ -43,7 +43,7 @@ public class InviteController implements InviteControllerDocs {
     @GetMapping("/{inviteCode}")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<Void> checkInviteLink(@PathVariable String inviteCode) {
-        verifyInviteLinkUseCase.execute(inviteCode);
+        verifyInviteLinkUseCase.verifyInviteLink(inviteCode);
         return CommonResponse.success();
     }
 
@@ -53,7 +53,7 @@ public class InviteController implements InviteControllerDocs {
     public CommonResponse<ContractUuidResponse> verifyPassword(
             @PathVariable String inviteCode,
             @Valid @RequestBody VerifyInvitePasswordRequest request) {
-        ContractUuidResponse result = verifyInvitePasswordUseCase.execute(inviteCode, request);
+        ContractUuidResponse result = verifyInvitePasswordUseCase.verifyInvitePassword(inviteCode, request);
         return CommonResponse.success(result);
     }
 
@@ -63,7 +63,7 @@ public class InviteController implements InviteControllerDocs {
     public CommonResponse<InviteContractInfoResponse> getContractInfo(
             @PathVariable String inviteCode,
             @PathVariable String contractUuid) {
-        InviteContractInfoResponse result = getInviteContractInfoUseCase.execute(contractUuid);
+        InviteContractInfoResponse result = getInviteContractInfoUseCase.getInviteContractInfo(contractUuid);
         return CommonResponse.success(result);
     }
 }

@@ -35,7 +35,7 @@ class VerifyInviteLinkUseCaseImplTest {
         when(redisTemplate.hasKey(inviteCode)).thenReturn(true);
 
         // when & then
-        assertDoesNotThrow(() -> verifyInviteLinkUseCase.execute(inviteCode));
+        assertDoesNotThrow(() -> verifyInviteLinkUseCase.verifyInviteLink(inviteCode));
     }
 
     @Test
@@ -46,6 +46,6 @@ class VerifyInviteLinkUseCaseImplTest {
         when(redisTemplate.hasKey(inviteCode)).thenReturn(false);
 
         // when & then
-        assertThrows(AppException.class, () -> verifyInviteLinkUseCase.execute(inviteCode));
+        assertThrows(AppException.class, () -> verifyInviteLinkUseCase.verifyInviteLink(inviteCode));
     }
 }

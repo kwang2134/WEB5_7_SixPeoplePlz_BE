@@ -24,7 +24,7 @@ public class GetInviteContractInfoUseCaseImpl implements GetInviteContractInfoUs
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    public InviteContractInfoResponse execute(String contractUuid) {
+    public InviteContractInfoResponse getInviteContractInfo(String contractUuid) {
         Contract contract = contractRepository.findByUuid(contractUuid)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약입니다."));
 

@@ -51,7 +51,7 @@ class VerifyInvitePasswordUseCaseImplTest {
         when(valueOperations.get(inviteCode)).thenReturn(objectMapper.convertValue(inviteInfo, java.util.Map.class));
 
         // when
-        ContractUuidResponse result = verifyInvitePasswordUseCase.execute(inviteCode, request);
+        ContractUuidResponse result = verifyInvitePasswordUseCase.verifyInvitePassword(inviteCode, request);
 
         // then
         assertThat(result).isNotNull();
@@ -72,6 +72,6 @@ class VerifyInvitePasswordUseCaseImplTest {
         when(valueOperations.get(inviteCode)).thenReturn(objectMapper.convertValue(inviteInfo, java.util.Map.class));
 
         // when & then
-        assertThrows(AppException.class, () -> verifyInvitePasswordUseCase.execute(inviteCode, request));
+        assertThrows(AppException.class, () -> verifyInvitePasswordUseCase.verifyInvitePassword(inviteCode, request));
     }
 }

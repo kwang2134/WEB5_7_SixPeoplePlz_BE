@@ -66,7 +66,7 @@ class GetInviteContractInfoUseCaseImplTest {
         when(valueOperations.get(supervisorCountKey)).thenReturn(5); // 자리가 남아있음
 
         // when
-        InviteContractInfoResponse result = getInviteContractInfoUseCase.execute(contractUuid, newSupervisor);
+        InviteContractInfoResponse result = getInviteContractInfoUseCase.getInviteContractInfo(contractUuid, newSupervisor);
 
         // then
         assertThat(result).isNotNull();
@@ -85,7 +85,7 @@ class GetInviteContractInfoUseCaseImplTest {
         when(valueOperations.get(supervisorCountKey)).thenReturn(0); // 자리가 없음
 
         // when & then
-        assertThrows(AppException.class, () -> getInviteContractInfoUseCase.execute(contractUuid, newSupervisor));
+        assertThrows(AppException.class, () -> getInviteContractInfoUseCase.getInviteContractInfo(contractUuid, newSupervisor));
     }
 
     @Test
@@ -100,6 +100,6 @@ class GetInviteContractInfoUseCaseImplTest {
         when(valueOperations.get(anyString())).thenReturn(5); // 자리는 남아있음
 
         // when & then
-        assertThrows(AppException.class, () -> getInviteContractInfoUseCase.execute(contractUuid, userWhoAlreadyParticipated));
+        assertThrows(AppException.class, () -> getInviteContractInfoUseCase.getInviteContractInfo(contractUuid, userWhoAlreadyParticipated));
     }
 }

@@ -43,7 +43,7 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    public InviteLinkResponse execute(Long contractId, User user) {
+    public InviteLinkResponse createInviteLink(Long contractId, User user) {
         Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 

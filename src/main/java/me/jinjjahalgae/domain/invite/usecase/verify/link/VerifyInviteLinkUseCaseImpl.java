@@ -12,7 +12,7 @@ public class VerifyInviteLinkUseCaseImpl implements VerifyInviteLinkUseCase {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void execute(String inviteCode) {
+    public void verifyInviteLink(String inviteCode) {
         // inviteCode에 해당하는 초대 정보가 있는지 확인
         boolean isValid = redisTemplate.hasKey(inviteCode);
 

@@ -27,7 +27,7 @@ class WithdrawContractUseCaseImplTest {
     private ContractRepository contractRepository;
 
     @InjectMocks
-    private WithdrawContractUseCaseImpl withdrawContractUseCase;
+    private WithdrawContractUseCase withdrawContractUseCase;
 
     @Test
     @DisplayName("계약 중도 포기 성공")

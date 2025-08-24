@@ -30,7 +30,7 @@ class CancelContractUseCaseImplTest {
     private DeleteInviteInfoUseCaseImpl deleteInviteInfoUseCase;
 
     @InjectMocks
-    private CancelContractUseCaseImpl cancelContractUseCase;
+    private CancelContractUseCase cancelContractUseCase;
 
     @Test
     @DisplayName("계약 시작 전 취소")

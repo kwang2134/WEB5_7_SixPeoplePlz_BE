@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.Create
 import me.jinjjahalgae.domain.user.User;
 
 public interface CreateSupervisorParticipationUseCase {
-    void execute(Long contractId, CreateContractorParticipationRequest request, User user);
+    void createSupervisorParticipation(Long contractId, CreateContractorParticipationRequest request, User user);
 }

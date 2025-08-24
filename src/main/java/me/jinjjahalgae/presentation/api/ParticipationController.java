@@ -31,7 +31,7 @@ public class ParticipationController implements ParticipationControllerDocs {
             @PathVariable("contractId") Long contractId,
             @Valid @RequestBody CreateContractorParticipationRequest request,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
-        createSupervisorParticipationUseCase.execute(contractId, request, principal.getUser());
+        createSupervisorParticipationUseCase.createSupervisorParticipation(contractId, request, principal.getUser());
         return CommonResponse.success();
     }
 
@@ -41,7 +41,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     public CommonResponse<Void> withdrawAsSupervisor(
             @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
-        deleteSupervisorParticipationUseCase.execute(contractId, principal.getUser());
+        deleteSupervisorParticipationUseCase.deleteSupervisorParticipation(contractId, principal.getUser());
         return CommonResponse.success();
     }
 
@@ -51,7 +51,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     public CommonResponse<Void> abandonAsSupervisor(
             @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
-        patchSupervisorParticipationUseCase.execute(contractId, principal.getUser());
+        patchSupervisorParticipationUseCase.patchSupervisorParticipation(contractId, principal.getUser());
         return CommonResponse.success();
     }
 }

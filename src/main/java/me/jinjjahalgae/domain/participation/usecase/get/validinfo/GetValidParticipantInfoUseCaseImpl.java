@@ -12,13 +12,13 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetValidParticipantInfoByContractIdUseCaseImpl implements GetValidParticipantInfoByContractIdUseCase {
+public class GetValidParticipantInfoUseCaseImpl implements GetValidParticipantInfoUseCase {
 
     private final ParticipationRepository repository;
 
     @Override
     @Transactional(readOnly = true)
-    public List<ParticipantInfoResponse> execute(long contractId) {
+    public List<ParticipantInfoResponse> getValidParticipationInfo(long contractId) {
 
         return repository.findByContractId(contractId).stream()
                 .filter(Participation::getValid)

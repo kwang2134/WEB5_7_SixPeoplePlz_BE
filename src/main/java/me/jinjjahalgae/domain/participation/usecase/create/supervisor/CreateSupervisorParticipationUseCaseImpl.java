@@ -35,7 +35,7 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
     @Override
     @Transactional
-    public void execute(Long contractId, CreateContractorParticipationRequest request, User user) {
+    public void createSupervisorParticipation(Long contractId, CreateContractorParticipationRequest request, User user) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 

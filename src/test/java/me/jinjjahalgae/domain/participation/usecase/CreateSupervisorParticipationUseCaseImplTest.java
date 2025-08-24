@@ -59,7 +59,7 @@ class CreateSupervisorParticipationUseCaseImplTest {
         when(valueOperations.get(supervisorCountKey)).thenReturn(5); // 자리가 남아있음
 
         // when
-        createSupervisorParticipationUseCase.execute(contract.getId(), request, user);
+        createSupervisorParticipationUseCase.createSupervisorParticipation(contract.getId(), request, user);
 
         // then
         assertThat(contract.getParticipations()).hasSize(1);
@@ -77,7 +77,7 @@ class CreateSupervisorParticipationUseCaseImplTest {
 
         // when & then
         assertThrows(AppException.class,
-                () -> createSupervisorParticipationUseCase.execute(contract.getId(), request, user));
+                () -> createSupervisorParticipationUseCase.createSupervisorParticipation(contract.getId(), request, user));
     }
 
     @Test
@@ -93,6 +93,6 @@ class CreateSupervisorParticipationUseCaseImplTest {
 
         // when & then
         assertThrows(AppException.class,
-                () -> createSupervisorParticipationUseCase.execute(contract.getId(), request, user));
+                () -> createSupervisorParticipationUseCase.createSupervisorParticipation(contract.getId(), request, user));
     }
 }

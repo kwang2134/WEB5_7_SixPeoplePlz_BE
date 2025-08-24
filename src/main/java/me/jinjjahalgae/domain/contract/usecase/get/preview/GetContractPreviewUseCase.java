@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewRe
 
 public interface GetContractPreviewUseCase {
     //계약 상세 조회
-    ContractPreviewResponse execute(Long userId, Long contractId);
+    ContractPreviewResponse getContractPreview(Long userId, Long contractId);
 }

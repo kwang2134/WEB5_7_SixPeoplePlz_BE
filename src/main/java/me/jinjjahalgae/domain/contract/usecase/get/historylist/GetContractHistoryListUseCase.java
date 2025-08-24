@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface GetContractHistoryListUseCase {
 
-    public Page<ContractListResponse> execute(Long userId, ContractHistoryRequest request, Pageable pageable);
+    Page<ContractListResponse> getContractHistory(Long userId, ContractHistoryRequest request, Pageable pageable);
 }

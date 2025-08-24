@@ -157,7 +157,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(expectedResponse);
 
         // When
-        ContractDetailResponse result = contractDetailUseCase.execute(userId, contractId);
+        ContractDetailResponse result = contractDetailUseCase.getContractDetail(userId, contractId);
 
         // Then
         assertThat(result).isNotNull();
@@ -252,7 +252,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(responseWithValidParticipantsOnly);
 
         // When
-        ContractDetailResponse result = contractDetailUseCase.execute(userId, contractId);
+        ContractDetailResponse result = contractDetailUseCase.getContractDetail(userId, contractId);
 
         // Then
         assertThat(result.participants()).hasSize(3);
@@ -279,7 +279,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(expectedResponse);
 
         // When
-        ContractDetailResponse result = contractDetailUseCase.execute(supervisorId, contractId);
+        ContractDetailResponse result = contractDetailUseCase.getContractDetail(supervisorId, contractId);
 
         // Then
         assertThat(result).isNotNull();
@@ -298,7 +298,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractDetailUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> contractDetailUseCase.getContractDetail(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약");
 
@@ -317,7 +317,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(false);
 
         // When & Then
-        assertThatThrownBy(() -> contractDetailUseCase.execute(unauthorizedUserId, contractId))
+        assertThatThrownBy(() -> contractDetailUseCase.getContractDetail(unauthorizedUserId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
 
@@ -335,7 +335,7 @@ class GetContractDetailUseCaseTest {
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractDetailUseCase.execute(userId, invalidContractId))
+        assertThatThrownBy(() -> contractDetailUseCase.getContractDetail(userId, invalidContractId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약");
 

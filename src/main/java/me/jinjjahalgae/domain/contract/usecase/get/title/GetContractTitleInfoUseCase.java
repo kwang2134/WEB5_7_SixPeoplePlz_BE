@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoRe
 
 public interface GetContractTitleInfoUseCase {
     //유저가 감독자로 있는 계약의 정보 중 제목과 목표만
-    ContractTitleInfoResponse execute(Long userId, Long contractId);
+    ContractTitleInfoResponse getContractTitleInfo(Long userId, Long contractId);
 }

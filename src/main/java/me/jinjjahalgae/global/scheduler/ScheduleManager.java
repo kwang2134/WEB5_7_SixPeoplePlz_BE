@@ -34,10 +34,10 @@ public class ScheduleManager {
         log.info("[Scheduler] 5분 스케줄러 시작. 현재 UTC 시간: {}", Instant.now());
 
         // 단건 계약 24시간 체크
-        endOneOffContractUseCase.execute();
+        endOneOffContractUseCase.endOneOffContract();
 
         // 단건 계약 서명검증
-        verifyOneOffContractSignatureUseCase.execute();
+        verifyOneOffContractSignatureUseCase.verifyOneOffContractSignature();
 
         // 인증 24시간(만료) 체크
         checkExpiredProofUseCase.execute(Instant.now());

@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResp
 
 public interface GetContractDetailUseCase {
     //계약 상세 조회
-    ContractDetailResponse execute(Long userId, Long contractId);
+    ContractDetailResponse getContractDetail(Long userId, Long contractId);
 }

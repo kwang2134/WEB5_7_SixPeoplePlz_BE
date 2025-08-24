@@ -18,7 +18,7 @@ public class GetContractTitleInfoUseCaseImpl implements GetContractTitleInfoUseC
 
     @Override
     @Transactional(readOnly = true)
-    public ContractTitleInfoResponse execute(Long userId, Long contractId) {
+    public ContractTitleInfoResponse getContractTitleInfo(Long userId, Long contractId) {
 
         //실제 있는 계약인가?
         Contract contract = contractRepository.findById(contractId)

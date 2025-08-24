@@ -28,7 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import me.jinjjahalgae.domain.contract.usecase.get.historylist.GetContractHistoryListUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHistoryRequest;
@@ -55,7 +54,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @Valid @RequestBody CreateContractRequest request
     ) {
-        CreateContractResponse response = createContractUseCase.execute(user.getUserId(), request);
+        CreateContractResponse response = createContractUseCase.createContract(user.getUserId(), request);
         return CommonResponse.success(response);
     }
 
@@ -66,7 +65,7 @@ public class ContractController implements ContractControllerDocs {
             @RequestParam Role role,
             @PageableDefault(size = 10) Pageable pageable
     ){
-        Page<ContractListResponse> response = getContractListUseCase.execute(user.getUserId(), role, pageable);
+        Page<ContractListResponse> response = getContractListUseCase.getContractList(user.getUserId(), role, pageable);
         return CommonResponse.success(response);
     }
 
@@ -76,7 +75,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable("contractId") Long contractId
     ) {
-        ContractDetailResponse response = getContractDetailUseCase.execute(user.getUserId(), contractId);
+        ContractDetailResponse response = getContractDetailUseCase.getContractDetail(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 
@@ -86,7 +85,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable("contractId") Long contractId
     ) {
-        ContractTitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
+        ContractTitleInfoResponse response = getContractTitleInfoUseCase.getContractTitleInfo(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 
@@ -96,7 +95,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable("contractId") Long contractId
     ) {
-        ContractPreviewResponse response = getContractPreviewUseCase.execute(user.getUserId(), contractId);
+        ContractPreviewResponse response = getContractPreviewUseCase.getContractPreview(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 
@@ -109,7 +108,7 @@ public class ContractController implements ContractControllerDocs {
             @ModelAttribute ContractHistoryRequest request,
             @PageableDefault(size = 10, sort = "endDate", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<ContractListResponse> response = getContractHistoryListUseCase.execute(user.getUserId(), request, pageable);
+        Page<ContractListResponse> response = getContractHistoryListUseCase.getContractHistory(user.getUserId(), request, pageable);
         return CommonResponse.success(response);
     }
 
@@ -121,7 +120,7 @@ public class ContractController implements ContractControllerDocs {
             @PathVariable("contractId") Long contractId,
             @Valid @RequestBody ContractUpdateRequest request
     ) {
-        updateContractUseCase.execute(user.getUserId(), contractId, request);
+        updateContractUseCase.updateContract(user.getUserId(), contractId, request);
         return CommonResponse.success();
     }
 
@@ -131,7 +130,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable("contractId") Long contractId
     ) {
-        withdrawContractUseCase.execute(user.getUserId(), contractId);
+        withdrawContractUseCase.withdrawContract(user.getUserId(), contractId);
         return CommonResponse.success();
     }
 
@@ -141,7 +140,7 @@ public class ContractController implements ContractControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable("contractId") Long contractId
     ) {
-        cancelContractUseCase.execute(user.getUserId(), contractId);
+        cancelContractUseCase.cancelContract(user.getUserId(), contractId);
         return CommonResponse.success();
     }
 }

@@ -27,7 +27,7 @@ public class CreateContractUseCaseImpl implements CreateContractUseCase {
     private final ParticipationMapper participationMapper;
 
     @Override
-    public CreateContractResponse execute(Long userId, CreateContractRequest request) {
+    public CreateContractResponse createContract(Long userId, CreateContractRequest request) {
         //유저 검증하고
         User user = findUserById(userId);
         //계약 생성

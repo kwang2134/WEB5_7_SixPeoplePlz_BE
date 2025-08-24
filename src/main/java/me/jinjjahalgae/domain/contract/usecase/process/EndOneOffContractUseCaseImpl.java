@@ -33,7 +33,7 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
      * - 결과대기 상태에서 인증이 생성된지 24시간이 지나면 결과 승인처리
      */
     @Override
-    public void execute() {
+    public void endOneOffContract() {
         Instant deadline = Instant.now().minus(24, ChronoUnit.HOURS);
 
         List<Contract> endedOneOffContracts = contractRepository.findEndedOneOffContracts(deadline);

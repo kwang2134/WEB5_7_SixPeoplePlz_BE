@@ -12,7 +12,6 @@ import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
 import me.jinjjahalgae.global.exception.AppException;
-import me.jinjjahalgae.global.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -141,7 +140,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(newParticipation);
 
         // When
-        contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
+        contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest);
 
         // Then
         verify(contractRepository).findByIdWithUser(contractId);
@@ -165,7 +164,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractUpdateUseCase.execute(contractorId, contractId, updateRequest))
+        assertThatThrownBy(() -> contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest))
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
 
@@ -181,7 +180,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(Optional.of(contract));
 
         // When & Then
-        assertThatThrownBy(() -> contractUpdateUseCase.execute(otherUserId, contractId, updateRequest))
+        assertThatThrownBy(() -> contractUpdateUseCase.updateContract(otherUserId, contractId, updateRequest))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
 
@@ -207,7 +206,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(Optional.of(contract));
 
         // When & Then
-        assertThatThrownBy(() -> contractUpdateUseCase.execute(contractorId, contractId, updateRequest))
+        assertThatThrownBy(() -> contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest))
                 .isInstanceOf(AppException.class)
                 .hasMessage("감독자가 서명한 계약은 수정할 수 없습니다.");
 
@@ -242,7 +241,7 @@ class UpdateContractUseCaseTest {
         );
 
         // When
-        contractUpdateUseCase.execute(contractorId, contractId, longerRequest);
+        contractUpdateUseCase.updateContract(contractorId, contractId, longerRequest);
 
         // Then
         verify(contractRepository).findByIdWithUser(contractId);
@@ -265,14 +264,14 @@ class UpdateContractUseCaseTest {
                 .willReturn(newParticipation);
 
         // When - 계약자가 본인 계약 수정
-        contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
+        contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest);
 
         // Then
         verify(contractRepository).findByIdWithUser(contractId);
         assertThat(contract.getTitle()).isEqualTo("수정된 운동하기");
 
         // When & Then - 다른 사용자가 수정 시도하면 예외 발생
-        assertThatThrownBy(() -> contractUpdateUseCase.execute(999L, contractId, updateRequest))
+        assertThatThrownBy(() -> contractUpdateUseCase.updateContract(999L, contractId, updateRequest))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
     }
@@ -300,7 +299,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(newSignature);
 
         // When
-        contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
+        contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest);
 
         // Then
         verify(contractRepository).findByIdWithUser(contractId);
@@ -332,7 +331,7 @@ class UpdateContractUseCaseTest {
                 .willReturn(newParticipation);
 
         // When
-        contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
+        contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest);
 
         // Then
         long contractorCount = contract.getParticipations().stream()
@@ -358,7 +357,7 @@ class UpdateContractUseCaseTest {
                 .when(entityManager).flush();
 
         // When & Then
-        assertThatThrownBy(() -> contractUpdateUseCase.execute(contractorId, contractId, updateRequest))
+        assertThatThrownBy(() -> contractUpdateUseCase.updateContract(contractorId, contractId, updateRequest))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약 상태 변경 중 충돌이 발생했습니다. 다시 시도해주세요.");
     }

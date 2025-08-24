@@ -24,7 +24,7 @@ public class ContractJobProcessor {
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     @Transactional
     public void startContracts(String startContract) {
-        startContractsUseCase.execute();
+        startContractsUseCase.startContracts();
     }
 
     @Recover
@@ -38,7 +38,7 @@ public class ContractJobProcessor {
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     @Transactional
     public void endContracts(String endContract) {
-        endContractsUseCase.execute();
+        endContractsUseCase.endContracts();
     }
 
     @Recover

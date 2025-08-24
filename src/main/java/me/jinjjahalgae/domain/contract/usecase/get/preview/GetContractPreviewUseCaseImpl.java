@@ -30,7 +30,7 @@ public class GetContractPreviewUseCaseImpl implements GetContractPreviewUseCase 
      */
     @Override
     @Transactional(readOnly = true)
-    public ContractPreviewResponse execute(Long userId, Long contractId) {
+    public ContractPreviewResponse getContractPreview(Long userId, Long contractId) {
 
         // contractId로 계약 가져옴
         Contract contract = contractRepository.findContractById(contractId)

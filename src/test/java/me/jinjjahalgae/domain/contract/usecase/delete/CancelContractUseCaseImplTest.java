@@ -45,7 +45,7 @@ class CancelContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when
-        cancelContractUseCase.execute(userId, contractId);
+        cancelContractUseCase.cancelContract(userId, contractId);
 
         // then
         // cancelContract()는 상태 변경이 아닌 삭제이므로, delete 메서드가 호출되었는지만 검증하면 된다.
@@ -61,7 +61,7 @@ class CancelContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> cancelContractUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> cancelContractUseCase.cancelContract(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
     }
@@ -79,7 +79,7 @@ class CancelContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
-        assertThatThrownBy(() -> cancelContractUseCase.execute(otherUserId, contractId))
+        assertThatThrownBy(() -> cancelContractUseCase.cancelContract(otherUserId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
     }
@@ -97,7 +97,7 @@ class CancelContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
-        assertThatThrownBy(() -> cancelContractUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> cancelContractUseCase.cancelContract(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("시작 전인 계약만 포기할 수 있습니다.");
     }

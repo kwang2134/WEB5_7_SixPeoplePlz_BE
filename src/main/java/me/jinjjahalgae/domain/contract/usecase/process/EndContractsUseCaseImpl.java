@@ -31,7 +31,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
 
     @Override
     @Transactional
-    public void execute() {
+    public void endContracts() {
         log.info("계약 종료 처리를 시작합니다.");
         Instant now = Instant.now();
         Instant before = now.minus(24, ChronoUnit.HOURS);

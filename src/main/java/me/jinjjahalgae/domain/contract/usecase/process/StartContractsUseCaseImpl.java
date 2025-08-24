@@ -35,7 +35,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
 
     @Override
     @Transactional
-    public void execute() {
+    public void startContracts() {
         log.info("계약 시작 처리를 시작합니다.");
         Instant now = Instant.now();
         List<Contract> pendingContracts = contractRepository.findPendingContractsToStart(now);

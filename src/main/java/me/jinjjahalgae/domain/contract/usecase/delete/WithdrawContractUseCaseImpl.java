@@ -15,7 +15,7 @@ public class WithdrawContractUseCaseImpl implements WithdrawContractUseCase {
 
     @Override
     @Transactional
-    public void execute(Long userId, Long contractId) {
+    public void withdrawContract(Long userId, Long contractId) {
 
         Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));

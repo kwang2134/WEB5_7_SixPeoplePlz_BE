@@ -27,7 +27,7 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
     private final UserRepository userRepository;
 
     @Override
-    public void execute(Long userId, Long contractId, ContractUpdateRequest request) {
+    public void updateContract(Long userId, Long contractId, ContractUpdateRequest request) {
         try {
             // 계약 조회
             Contract contract = contractRepository.findByIdWithUser(contractId)

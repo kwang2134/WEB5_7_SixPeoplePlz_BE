@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,7 +31,7 @@ class WithdrawContractUseCaseImplTest {
 
     @Test
     @DisplayName("계약 중도 포기 성공")
-    void execute_Success() {
+    void withdrawContract_Success() {
         // given
         Long userId = 1L;
         Long contractId = 1L;
@@ -43,7 +42,7 @@ class WithdrawContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when
-        withdrawContractUseCase.execute(userId, contractId);
+        withdrawContractUseCase.withdrawContract(userId, contractId);
 
         // then
         assertThat(contract.getStatus()).isEqualTo(ContractStatus.ABANDONED);
@@ -51,7 +50,7 @@ class WithdrawContractUseCaseImplTest {
 
     @Test
     @DisplayName("계약을 찾을 수 없음")
-    void execute_ContractNotFound() {
+    void withdrawContract_ContractNotFound() {
         // given
         Long userId = 1L;
         Long contractId = 999L;
@@ -59,14 +58,14 @@ class WithdrawContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> withdrawContractUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> withdrawContractUseCase.withdrawContract(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
     }
 
     @Test
     @DisplayName("계약자가 아닌 경우 중도 포기 실패")
-    void execute_NotContractor() {
+    void withdrawContract_NotContractor() {
         // given
         Long contractorId = 1L;
         Long otherUserId = 2L;
@@ -78,14 +77,14 @@ class WithdrawContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
-        assertThatThrownBy(() -> withdrawContractUseCase.execute(otherUserId, contractId))
+        assertThatThrownBy(() -> withdrawContractUseCase.withdrawContract(otherUserId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("진행 중이 아닌 계약 중도 포기 실패")
-    void execute_NotInProgress() {
+    void withdrawContract_NotInProgress() {
         // given
         Long userId = 1L;
         Long contractId = 1L;
@@ -96,7 +95,7 @@ class WithdrawContractUseCaseImplTest {
         given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
-        assertThatThrownBy(() -> withdrawContractUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> withdrawContractUseCase.withdrawContract(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("진행 중인 계약만 포기할 수 있습니다.");
     }

@@ -17,7 +17,7 @@ public class CancelContractUseCaseImpl implements CancelContractUseCase {
 
     @Override
     @Transactional
-    public void execute(Long userId, Long contractId) {
+    public void cancelContract(Long userId, Long contractId) {
         //유저 확인
         //권한 확인 -> 기존 다른 확인 부분과 같음
         Contract contract = contractRepository.findByIdWithUser(contractId)

@@ -105,7 +105,7 @@ class CreateContractUseCaseImplTest {
 
 
         // Act (실행): 테스트하려는 메서드를 호출
-        CreateContractResponse response = contractCreateUseCase.execute(userId, request);
+        CreateContractResponse response = contractCreateUseCase.createContract(userId, request);
 
         // Assert (검증): 결과가 우리의 예상과 맞는지 확인
         assertThat(response).isNotNull();

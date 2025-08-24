@@ -29,7 +29,7 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
      * 계약이 생성된 후 24시간 내에 1명이라도 감독자가 서명하지 않은 계약은 삭제됩니다.
      */
     @Override
-    public void execute() {
+    public void verifyOneOffContractSignature() {
         // 24시간 전을 마감 시간으로 설정
         Instant deadline = Instant.now().minus(24, ChronoUnit.HOURS);
 

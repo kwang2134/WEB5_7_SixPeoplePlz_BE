@@ -25,7 +25,7 @@ public class GetContractHistoryListUseCaseImpl implements GetContractHistoryList
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ContractListResponse> execute(Long userId, ContractHistoryRequest request, Pageable pageable) {
+    public Page<ContractListResponse> getContractHistory(Long userId, ContractHistoryRequest request, Pageable pageable) {
 
         // status에는 null, COMPLETED(이행 성공), FAILED(이행 실패), ABANDONED(중간 포기)가능
         // 이게 아닌 status 들어왔으면 ErrorCode.INVALID_REQUEST

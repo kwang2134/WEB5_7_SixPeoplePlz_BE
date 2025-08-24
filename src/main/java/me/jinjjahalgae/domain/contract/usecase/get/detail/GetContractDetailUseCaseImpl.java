@@ -28,7 +28,7 @@ public class GetContractDetailUseCaseImpl implements GetContractDetailUseCase {
 
     /// 본인이 계약자인 계약 개요 카드에 보이는 정보
     @Override
-    public ContractDetailResponse execute(Long userId, Long contractId) {
+    public ContractDetailResponse getContractDetail(Long userId, Long contractId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약 id: " + contractId));
 

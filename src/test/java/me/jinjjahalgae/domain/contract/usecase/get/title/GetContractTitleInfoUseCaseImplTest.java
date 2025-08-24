@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,7 +78,7 @@ class ContractTitleInfoUseCaseTest {
                 .willReturn(expectedResponse);
 
         // When
-        ContractTitleInfoResponse result = contractTitleInfoUseCase.execute(userId, contractId);
+        ContractTitleInfoResponse result = contractTitleInfoUseCase.getContractTitleInfo(userId, contractId);
 
         // Then
         assertThat(result).isNotNull();
@@ -102,7 +101,7 @@ class ContractTitleInfoUseCaseTest {
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractTitleInfoUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> contractTitleInfoUseCase.getContractTitleInfo(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
 
@@ -124,7 +123,7 @@ class ContractTitleInfoUseCaseTest {
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractTitleInfoUseCase.execute(userId, contractId))
+        assertThatThrownBy(() -> contractTitleInfoUseCase.getContractTitleInfo(userId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
 

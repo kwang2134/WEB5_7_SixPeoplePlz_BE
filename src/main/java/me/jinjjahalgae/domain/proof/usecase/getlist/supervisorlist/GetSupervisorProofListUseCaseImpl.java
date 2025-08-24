@@ -9,6 +9,7 @@ import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofListQueryService;
 import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.dto.SupervisorProofListResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
     private final ContractRepository contractRepository;
     private final FeedbackRepository feedbackRepository;
     private final ParticipationRepository participationRepository;
+    private final ProofListQueryService proofListQueryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,21 +63,13 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
         // 달의 마지막 날 23:59:59.999999999
         Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).atZone(zone).toInstant();
 
-        // 한 달에 해당하는 원본 인증 id들 (감독자가 피드백을 한 것만)
-        List<Long> proofIds = proofRepository.findOriginalProofIdsByMonthForSupervisor(contractId, startDate, endDate, userId);
+        // 원본 인증 조회
+        List<Proof> proofs = proofListQueryService.findOriginalProofs(contractId, startDate, endDate, userId, true);
+        List<Long> originalIds = proofs.stream().map(Proof::getId).toList();
 
-        // 감독자가 처리한 원본 인증들
-        List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
-
-        // 입력 받은 달에 해당하는 모든 재인증 id들 (감독자가 피드백을 한 것만)
-        List<Long> reProofIds = proofRepository.findReProofIdsByMonthForSupervisor(contractId, proofIds, userId);
-
-        // 감독자가 처리한 재인증 객체들
-        List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
-
-        // 원본 인증 id를 기반으로 재인증을 Map으로 매핑
-        Map<Long, Proof> reProofMap = reProofs.stream()
-                .collect(Collectors.toMap(Proof::getProofId, Function.identity()));
+        // 재인증 조회 및 매핑
+        List<Proof> reProofs = proofListQueryService.findReProofs(contractId, originalIds, userId, true);
+        Map<Long, Proof> reProofMap = proofListQueryService.mapReproofs(reProofs);
 
         // 감독자가 해당 계약에서 처리한 피드백들
         List<Feedback> feedbacks = feedbackRepository.findByContractIdAndUserId(contractId, userId);
@@ -89,9 +83,7 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
 
         // 응답 dto 변환
         return proofs.stream()
-                .map(org -> {
-                    return getSupervisorProofListResponse(org, reProofMap, feedbackMap);
-                })
+                .map(org -> getSupervisorProofListResponse(org, reProofMap, feedbackMap))
                 .toList();
     }
 

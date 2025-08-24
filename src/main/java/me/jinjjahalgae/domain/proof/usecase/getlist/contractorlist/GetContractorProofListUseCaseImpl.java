@@ -6,6 +6,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofListQueryService;
 import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.dto.ContractorProofListResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
 
     private final ProofRepository proofRepository;
     private final ContractRepository contractRepository;
+    private final ProofListQueryService proofListQueryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,21 +49,14 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
         // 달의 마지막 날 23:59:59.999999999
         Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).atZone(zone).toInstant();
 
-        // 한 달에 해당하는 원본 인증 id들
-        List<Long> proofIds = proofRepository.findOriginalProofIdsByMonth(contractId, startDate, endDate);
+        // 원본 인증 조회
+        List<Proof> proofs = proofListQueryService.findOriginalProofs(contractId, startDate, endDate, userId, false);
+        List<Long> originalIds = proofs.stream().map(Proof::getId).toList();
 
-        // 모든 원본 인증들
-        List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
+        // 재인증 조회
+        List<Proof> reProofs = proofListQueryService.findReProofs(contractId, originalIds, userId, false);
+        Map<Long, Proof> reProofMap = proofListQueryService.mapReproofs(reProofs);
 
-        // 입력 받은 달에 해당하는 모든 재인증 id들
-        List<Long> reProofIds = proofRepository.findReProofIdsByMonth(contractId, proofIds);
-
-        // 모든 재인증 객체들
-        List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
-
-        // 원본 인증 id를 기반으로 재인증을 Map으로 매핑
-        Map<Long, Proof> reProofMap = reProofs.stream()
-                .collect(Collectors.toMap(Proof::getProofId, Function.identity()));
 
         // 인증과 재인증을 하나의 응답으로 매핑
         return proofs.stream()

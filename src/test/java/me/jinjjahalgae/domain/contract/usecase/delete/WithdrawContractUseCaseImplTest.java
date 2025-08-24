@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -112,8 +114,8 @@ class WithdrawContractUseCaseImplTest {
     private Contract createContract(Long contractId, User user,ContractStatus status) {
         Contract contract = Contract.builder()
                 .user(user)
-                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
-                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
+                .startDate(Instant.now())
+                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
                 .title("테스트 계약")
                 .goal("목표")
                 .penalty("벌칙")

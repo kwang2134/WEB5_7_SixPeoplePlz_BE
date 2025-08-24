@@ -21,7 +21,7 @@ public class UpdateMyInfoUseCaseImpl implements UpdateMyInfoUseCase {
 
     @Override
     @Transactional
-    public MyInfoResponse execute(Long userId, UpdateMyInfoRequest request) {
+    public MyInfoResponse updateMyInfo(Long userId, UpdateMyInfoRequest request) {
         User user = userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("유저를 찾을 수 없음"));
 

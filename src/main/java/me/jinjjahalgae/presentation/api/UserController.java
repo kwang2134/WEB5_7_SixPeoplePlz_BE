@@ -28,7 +28,7 @@ public class UserController implements UserControllerDocs {
     public CommonResponse<MyInfoResponse> getMyInfo(
             @AuthenticationPrincipal CustomJwtPrincipal user
     ) {
-        MyInfoResponse response = getMyInfoUseCase.execute(user.getUserId());
+        MyInfoResponse response = getMyInfoUseCase.getMyInfo(user.getUserId());
 
         return CommonResponse.success(response);
     }
@@ -40,7 +40,7 @@ public class UserController implements UserControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @Valid @RequestBody UpdateMyInfoRequest request
     ) {
-        MyInfoResponse response = updateMyInfoUseCase.execute(user.getUserId(), request);
+        MyInfoResponse response = updateMyInfoUseCase.updateMyInfo(user.getUserId(), request);
 
         return CommonResponse.success(response);
     }
@@ -51,7 +51,7 @@ public class UserController implements UserControllerDocs {
     public CommonResponse<Void> deleteMyAccount(
             @AuthenticationPrincipal CustomJwtPrincipal user
     ) {
-        deleteMyAccountUseCase.execute(user.getUserId());
+        deleteMyAccountUseCase.deleteMyAccount(user.getUserId());
 
         return CommonResponse.success();
     }

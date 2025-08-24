@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 import me.jinjjahalgae.domain.user.usecase.update.myinfo.dto.UpdateMyInfoRequest;
 
 public interface UpdateMyInfoUseCase {
-    MyInfoResponse execute(Long userId, UpdateMyInfoRequest request);
+    MyInfoResponse updateMyInfo(Long userId, UpdateMyInfoRequest request);
 } 

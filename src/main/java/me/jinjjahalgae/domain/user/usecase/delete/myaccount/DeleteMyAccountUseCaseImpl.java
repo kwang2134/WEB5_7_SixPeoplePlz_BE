@@ -19,7 +19,7 @@ public class DeleteMyAccountUseCaseImpl implements DeleteMyAccountUseCase {
 
     @Override
     @Transactional
-    public void execute(Long userId) {
+    public void deleteMyAccount(Long userId) {
         User user = userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("유저를 찾을 수 없음"));
                 

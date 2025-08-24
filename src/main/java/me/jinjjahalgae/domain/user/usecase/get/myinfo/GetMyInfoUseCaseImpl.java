@@ -18,7 +18,7 @@ public class GetMyInfoUseCaseImpl implements GetMyInfoUseCase {
     private final UserMapper userMapper;
 
     @Override
-    public MyInfoResponse execute(Long userId) {
+    public MyInfoResponse getMyInfo(Long userId) {
         User user = userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("유저를 찾을 수 없음"));
             

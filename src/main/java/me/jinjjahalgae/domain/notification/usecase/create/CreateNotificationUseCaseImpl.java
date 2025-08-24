@@ -48,7 +48,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         List<Notification> notificationList = new ArrayList<>();
 
         // userid로 이름 가져오기
-        String actionUserName = getMyInfo.execute(request.actorUserId()).name();
+        String actionUserName = getMyInfo.getMyInfo(request.actorUserId()).name();
 
         // 메세지에 들어갈 계약 제목 찾아오기
         Contract contract = contractRepository.findContractById(request.contractId())

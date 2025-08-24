@@ -24,7 +24,7 @@ public class GetAllNotificationUseCaseImpl implements GetAllNotificationUseCase 
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<NotificationGetResponse> execute(Long userId, Pageable pageable) {
+    public Page<NotificationGetResponse> getAllNotification(Long userId, Pageable pageable) {
 
         return repository.findAllByUserId(userId, pageable)
                 .map(NotificationGetResponse::from);

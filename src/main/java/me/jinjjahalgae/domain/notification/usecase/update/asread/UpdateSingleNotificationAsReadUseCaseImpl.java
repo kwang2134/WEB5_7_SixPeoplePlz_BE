@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UpdateSingleNotificationAsReadUseCaseImpl implements UpdateSingleNotificationAsReadUseCase {
+public class UpdateSingleNotificationAsReadUseCaseImpl implements UpdateSingleNotificationUseCase {
 
     private final NotificationRepository notificationRepository;
 
@@ -24,7 +24,7 @@ public class UpdateSingleNotificationAsReadUseCaseImpl implements UpdateSingleNo
      */
     @Override
     @Transactional
-    public Long execute(Long notificationId) {
+    public Long updateSingleNotification(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.serviceException("존재하지 않는 알림 id입니다 : " + notificationId));
 

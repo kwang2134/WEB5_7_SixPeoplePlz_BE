@@ -6,7 +6,7 @@ import me.jinjjahalgae.domain.notification.usecase.delete.single.DeleteSingleNot
 import me.jinjjahalgae.domain.notification.usecase.get.all.GetAllNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.get.all.dto.NotificationGetResponse;
 import me.jinjjahalgae.domain.notification.usecase.get.unreadcount.GetCountUnreadNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.update.asread.UpdateSingleNotificationAsReadUseCase;
+import me.jinjjahalgae.domain.notification.usecase.update.asread.UpdateSingleNotificationUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.notification.NotificationControllerDocs;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +26,7 @@ public class NotificationController implements NotificationControllerDocs {
     private final GetCountUnreadNotificationUseCase countUnreadNotificationByUserId;
     private final DeleteAllNotificationUseCase deleteAllNotification;
     private final DeleteSingleNotificationUseCase deleteSingleNotification;
-    private final UpdateSingleNotificationAsReadUseCase markSingleNotificationAsRead;
+    private final UpdateSingleNotificationUseCase markSingleNotificationAsRead;
 
     /**
      * 현재 로그인한 사용자의 모든 알림 목록 조회
@@ -41,7 +40,7 @@ public class NotificationController implements NotificationControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal principal,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return CommonResponse.success(getAllNotification.execute(principal.getUserId(), pageable));
+        return CommonResponse.success(getAllNotification.getAllNotification(principal.getUserId(), pageable));
     }
 
     /**
@@ -54,7 +53,7 @@ public class NotificationController implements NotificationControllerDocs {
     public CommonResponse<Long> countUnreadNotificationByUserId(
             @AuthenticationPrincipal CustomJwtPrincipal principal
     ) {
-        return CommonResponse.success(countUnreadNotificationByUserId.execute(principal.getUserId()));
+        return CommonResponse.success(countUnreadNotificationByUserId.getCountUnreadNotification(principal.getUserId()));
     }
 
     /**
@@ -65,7 +64,7 @@ public class NotificationController implements NotificationControllerDocs {
     @Override
     @DeleteMapping
     public CommonResponse<Void> deleteAllNotification(@AuthenticationPrincipal CustomJwtPrincipal principal) {
-        deleteAllNotification.execute(principal.getUserId());
+        deleteAllNotification.deleteAllNotification(principal.getUserId());
         return CommonResponse.success();
     }
 
@@ -77,7 +76,7 @@ public class NotificationController implements NotificationControllerDocs {
     @Override
     @DeleteMapping("/{notificationId}")
     public CommonResponse<Void> deleteSingleNotification(@PathVariable("notificationId") Long notificationId) {
-        deleteSingleNotification.execute(notificationId);
+        deleteSingleNotification.deleteSingleNotification(notificationId);
         return CommonResponse.success();
     }
 
@@ -89,7 +88,7 @@ public class NotificationController implements NotificationControllerDocs {
     @Override
     @PatchMapping("/{notificationId}/read")
     public CommonResponse<Void> markSingleNotificationAsRead(@PathVariable("notificationId") Long notificationId) {
-        markSingleNotificationAsRead.execute(notificationId);
+        markSingleNotificationAsRead.updateSingleNotification(notificationId);
         return CommonResponse.success();
     }
 

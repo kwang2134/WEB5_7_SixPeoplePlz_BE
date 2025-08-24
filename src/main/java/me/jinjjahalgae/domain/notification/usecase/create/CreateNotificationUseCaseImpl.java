@@ -36,7 +36,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
 
     @Transactional // 트랜잭션 생성
     @Override
-    public void execute(NotificationCreateRequest request) {
+    public void createNotification(NotificationCreateRequest request) {
 
         // 불필요한 객체 생성 방지. 재사용하기.
         Notification notification;

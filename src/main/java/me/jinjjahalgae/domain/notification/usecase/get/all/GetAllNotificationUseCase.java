@@ -11,5 +11,5 @@ import org.springframework.data.domain.Pageable;
  */
 public interface GetAllNotificationUseCase {
 
-    Page<NotificationGetResponse> execute(Long userId, Pageable pageable);
+    Page<NotificationGetResponse> getAllNotification(Long userId, Pageable pageable);
 }

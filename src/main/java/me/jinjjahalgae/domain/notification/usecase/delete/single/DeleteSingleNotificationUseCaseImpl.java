@@ -14,7 +14,7 @@ public class DeleteSingleNotificationUseCaseImpl implements DeleteSingleNotifica
 
     @Override
     @Transactional // 트랜잭션 생성
-    public void execute(Long notificationId) {
+    public void deleteSingleNotification(Long notificationId) {
         notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.domainException("존재하지 않는 알림id : " + notificationId));
         notificationRepository.deleteById(notificationId);

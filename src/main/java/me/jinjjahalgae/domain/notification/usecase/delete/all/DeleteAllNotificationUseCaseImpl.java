@@ -20,7 +20,7 @@ public class DeleteAllNotificationUseCaseImpl implements DeleteAllNotificationUs
      */
     @Override
     @Transactional // 트랜잭션 생성
-    public void execute(Long userId) {
+    public void deleteAllNotification(Long userId) {
 
         notificationRepository.deleteAllByUserId(userId);
     }

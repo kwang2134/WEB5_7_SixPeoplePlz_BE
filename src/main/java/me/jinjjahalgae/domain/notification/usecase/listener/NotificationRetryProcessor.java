@@ -25,7 +25,7 @@ public class NotificationRetryProcessor {
      */
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void processSingle(NotificationEvent event) {
-        createNotificationUseCase.execute(
+        createNotificationUseCase.createNotification(
                 new NotificationCreateRequest(
                         event.notificationType(),
                         event.contractId(),
@@ -40,7 +40,7 @@ public class NotificationRetryProcessor {
     @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void processBatch(NotificationBatchEvent event) {
         for (NotificationData data : event.notificationData()) {
-            createNotificationUseCase.execute(
+            createNotificationUseCase.createNotification(
                     new NotificationCreateRequest(
                             event.notificationType(),
                             data.contractId(),

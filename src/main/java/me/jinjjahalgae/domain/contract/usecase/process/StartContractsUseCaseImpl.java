@@ -3,14 +3,12 @@ package me.jinjjahalgae.domain.contract.usecase.process;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.model.NotificationData;
 import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBatchEvent;
-import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
 import org.springframework.context.ApplicationEventPublisher;
@@ -70,7 +68,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
 
             // 트랜잭션 분리로 usecase를 불러와 알림 전송
             deleteContracts.forEach(contract ->
-                    createNotificationUseCase.execute(new NotificationCreateRequest(
+                    createNotificationUseCase.createNotification(new NotificationCreateRequest(
                             NotificationType.CONTRACT_AUTO_DELETED,
                             contract.getId(),
                             contract.getUser().getId()

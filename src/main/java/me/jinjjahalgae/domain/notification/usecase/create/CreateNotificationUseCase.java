@@ -9,5 +9,5 @@ import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreate
  */
 public interface CreateNotificationUseCase {
 
-    void execute(NotificationCreateRequest request);
+    void createNotification(NotificationCreateRequest request);
 }

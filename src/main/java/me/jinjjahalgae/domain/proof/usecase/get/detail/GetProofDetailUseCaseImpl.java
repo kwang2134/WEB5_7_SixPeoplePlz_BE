@@ -22,7 +22,7 @@ public class GetProofDetailUseCaseImpl implements GetProofDetailUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public ProofDetailResponse execute(Long proofId, Long userId) {
+    public ProofDetailResponse getProofDetail(Long proofId, Long userId) {
         // 인증 조회 (피드백)
         Proof proofWithFeedback = proofRepository.findByIdWithFeedbacks(proofId)
                 .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException(proofId + "에 대한 인증이 존재하지 않습니다."));

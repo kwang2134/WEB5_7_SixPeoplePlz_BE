@@ -85,9 +85,9 @@ class GetProofDetailUseCaseSliceTest {
 
     @Test
     @DisplayName("인증 상세 조회 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void getProofDetail_Success() {
         // when
-        ProofDetailResponse result = getProofDetailUseCase.execute(proofId, userId);
+        ProofDetailResponse result = getProofDetailUseCase.getProofDetail(proofId, userId);
 
         // then
         assertThat(result).isNotNull();
@@ -96,24 +96,24 @@ class GetProofDetailUseCaseSliceTest {
 
     @Test
     @DisplayName("인증이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenProofNotFound() {
+    void getProofDetail_ThrowsException_WhenProofNotFound() {
         // given
         Long nonExistentProofId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getProofDetailUseCase.execute(nonExistentProofId, userId))
+        assertThatThrownBy(() -> getProofDetailUseCase.getProofDetail(nonExistentProofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 인증을 찾을 수 없습니다.");
     }
 
     @Test
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNotParticipant() {
+    void getProofDetail_ThrowsException_WhenNotParticipant() {
         // given
         Long nonParticipantUserId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getProofDetailUseCase.execute(proofId, nonParticipantUserId))
+        assertThatThrownBy(() -> getProofDetailUseCase.getProofDetail(proofId, nonParticipantUserId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }

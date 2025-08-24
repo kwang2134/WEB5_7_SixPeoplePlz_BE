@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 
 public interface CreateProofUseCase {
 
-    void execute(ProofCreateRequest request, Long contractId, Long userId);
+    void createProof(ProofCreateRequest request, Long contractId, Long userId);
 }

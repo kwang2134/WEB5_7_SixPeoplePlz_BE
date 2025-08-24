@@ -14,18 +14,15 @@ import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
 import me.jinjjahalgae.global.exception.AppException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,10 +82,10 @@ class CreateReProofUseCaseSliceTest {
 
     @Test
     @DisplayName("재인증 생성 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void createReProof_Success() {
         // when
         contract.start(3);
-        createReProofUseCase.execute(validRequest, proofId, userId);
+        createReProofUseCase.createReProof(validRequest, proofId, userId);
 
         // then
         List<Proof> proofs = proofRepository.findAll();
@@ -110,26 +107,26 @@ class CreateReProofUseCaseSliceTest {
 
     @Test
     @DisplayName("이미지가 없으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNoImage() {
+    void createReProof_ThrowsException_WhenNoImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest(null, null, null, "코멘트");
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(requestWithoutImage, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(requestWithoutImage, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("최소 1장 이상의 이미지가 필요합니다.");
     }
 
     @Test
     @DisplayName("원본 인증이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenProofNotFound() {
+    void createReProof_ThrowsException_WhenProofNotFound() {
         // given
         contract.start(3);
         Long nonExistentProofId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, nonExistentProofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, nonExistentProofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 인증을 찾을 수 없습니다.");
     }
@@ -148,27 +145,27 @@ class CreateReProofUseCaseSliceTest {
 
     @Test
     @DisplayName("오늘자 재인증이 이미 존재하면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenReProofAlreadyExists() {
+    void createReProof_ThrowsException_WhenReProofAlreadyExists() {
         // given
         contract.start(3);
         Proof existingReProof = ProofTestUtil.createProofBeforeSave("기존 재인증", ProofStatus.APPROVE_PENDING, contractId, proofId);
         proofRepository.save(existingReProof);
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 날짜에 이미 재인증이 존재합니다.");
     }
 
     @Test
     @DisplayName("세 번째 이미지까지 포함한 재인증 생성 성공 - 슬라이스 테스트")
-    void execute_Success_WithThirdImage() {
+    void createReProof_Success_WithThirdImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
 
         // when
-        createReProofUseCase.execute(requestWithThirdImage, proofId, userId);
+        createReProofUseCase.createReProof(requestWithThirdImage, proofId, userId);
 
         // then
         List<Proof> proofs = proofRepository.findAll();
@@ -180,7 +177,7 @@ class CreateReProofUseCaseSliceTest {
 
     @Test
     @DisplayName("계약이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenContractNotFound() {
+    void createReProof_ThrowsException_WhenContractNotFound() {
         // given
         contract.start(3);
         Proof proofWithNonExistentContract = ProofTestUtil.createProofBeforeSave("테스트", ProofStatus.REJECTED, 999L, null);
@@ -188,7 +185,7 @@ class CreateReProofUseCaseSliceTest {
         Long id = proofWithNonExistentContract.getId();
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, id, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, id, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약입니다.");
     }

@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,7 +63,7 @@ class CreateReProofUseCaseUnitTest {
 
     @Test
     @DisplayName("재인증 생성 성공")
-    void execute_Success() {
+    void createReProof_Success() {
         // given
         contract.start(3);
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
@@ -75,7 +74,7 @@ class CreateReProofUseCaseUnitTest {
         when(proofImageRepository.save(any(ProofImage.class))).thenReturn(ProofTestUtil.createProofImage());
 
         // when
-        createReProofUseCase.execute(validRequest, proofId, userId);
+        createReProofUseCase.createReProof(validRequest, proofId, userId);
 
         // then
         verify(proofRepository).save(any(Proof.class));
@@ -84,58 +83,58 @@ class CreateReProofUseCaseUnitTest {
 
     @Test
     @DisplayName("이미지가 없으면 예외 발생")
-    void execute_ThrowsException_WhenNoImage() {
+    void createReProof_ThrowsException_WhenNoImage() {
         // given
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest(null, null, null, "코멘트");
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(requestWithoutImage, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(requestWithoutImage, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("최소 1장 이상의 이미지가 필요합니다.");
     }
 
     @Test
     @DisplayName("원본 인증이 존재하지 않으면 예외 발생")
-    void execute_ThrowsException_WhenProofNotFound() {
+    void createReProof_ThrowsException_WhenProofNotFound() {
         // given
         when(proofRepository.findById(proofId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 인증을 찾을 수 없습니다.");
     }
 
     @Test
     @DisplayName("계약이 존재하지 않으면 예외 발생")
-    void execute_ThrowsException_WhenContractNotFound() {
+    void createReProof_ThrowsException_WhenContractNotFound() {
         // given
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
         when(contractRepository.findById(contractId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약입니다.");
     }
 
     @Test
     @DisplayName("사용자의 계약이 아니면 예외 발생")
-    void execute_ThrowsException_WhenNotUserContract() {
+    void createReProof_ThrowsException_WhenNotUserContract() {
         // given
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("오늘자 재인증이 이미 존재하면 예외 발생")
-    void execute_ThrowsException_WhenReProofAlreadyExists() {
+    void createReProof_ThrowsException_WhenReProofAlreadyExists() {
         // given
         contract.start(3);
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
@@ -144,14 +143,14 @@ class CreateReProofUseCaseUnitTest {
         when(proofRepository.existsReProofByContractIdAndCreatedAtToday(eq(contractId), any(), any())).thenReturn(true);
 
         // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+        assertThatThrownBy(() -> createReProofUseCase.createReProof(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 날짜에 이미 재인증이 존재합니다.");
     }
 
     @Test
     @DisplayName("세 번째 이미지까지 포함한 재인증 생성 성공")
-    void execute_Success_WithThirdImage() {
+    void createReProof_Success_WithThirdImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
@@ -163,7 +162,7 @@ class CreateReProofUseCaseUnitTest {
         when(proofImageRepository.save(any(ProofImage.class))).thenReturn(ProofTestUtil.createProofImage());
 
         // when
-        createReProofUseCase.execute(requestWithThirdImage, proofId, userId);
+        createReProofUseCase.createReProof(requestWithThirdImage, proofId, userId);
 
         // then
         verify(proofRepository).save(any(Proof.class));

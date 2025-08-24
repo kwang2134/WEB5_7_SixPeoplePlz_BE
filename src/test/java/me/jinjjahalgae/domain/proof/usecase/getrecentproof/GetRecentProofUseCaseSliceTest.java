@@ -21,9 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,7 +70,7 @@ class GetRecentProofUseCaseSliceTest {
 
     @Test
     @DisplayName("최근 인증 목록 조회 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void getRecentProof_Success() {
         // given
         // 인증 1
         Proof proof1 = ProofTestUtil.createProofBeforeSave("최근 인증1", ProofStatus.APPROVED, contractId, null);
@@ -107,7 +105,7 @@ class GetRecentProofUseCaseSliceTest {
         save4.addProofImage(savedImage4);
 
         // when
-        List<ProofRecentResponse> result = getRecentProofUseCase.execute(contractId, userId);
+        List<ProofRecentResponse> result = getRecentProofUseCase.getRecentProof(contractId, userId);
 
         // then
         assertThat(result).hasSize(3);
@@ -115,21 +113,21 @@ class GetRecentProofUseCaseSliceTest {
 
     @Test
     @DisplayName("사용자의 계약이 아니면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNotUserContract() {
+    void getRecentProof_ThrowsException_WhenNotUserContract() {
         // given
         Long nonUserContractId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getRecentProofUseCase.execute(nonUserContractId, userId))
+        assertThatThrownBy(() -> getRecentProofUseCase.getRecentProof(nonUserContractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("최근 인증이 없을 때 빈 리스트 반환 - 슬라이스 테스트")
-    void execute_ReturnsEmptyList_WhenNoRecentProofs() {
+    void getRecentProof_ReturnsEmptyList_WhenNoRecentProofs() {
         // when
-        List<ProofRecentResponse> result = getRecentProofUseCase.execute(contractId, userId);
+        List<ProofRecentResponse> result = getRecentProofUseCase.getRecentProof(contractId, userId);
 
         // then
         assertThat(result).isEmpty();
@@ -137,7 +135,7 @@ class GetRecentProofUseCaseSliceTest {
 
     @Test
     @DisplayName("최근 인증이 3개 미만일 때 성공 - 슬라이스 테스트")
-    void execute_Success_WhenLessThanThreeProofs() {
+    void getRecentProof_Success_WhenLessThanThreeProofs() {
         // given
         // 인증 1
         Proof proof1 = ProofTestUtil.createProofBeforeSave("최근 인증1", ProofStatus.APPROVED, contractId, null);
@@ -156,7 +154,7 @@ class GetRecentProofUseCaseSliceTest {
         save2.addProofImage(savedImage2);
 
         // when
-        List<ProofRecentResponse> result = getRecentProofUseCase.execute(contractId, userId);
+        List<ProofRecentResponse> result = getRecentProofUseCase.getRecentProof(contractId, userId);
 
         // then
         assertThat(result).hasSize(2);

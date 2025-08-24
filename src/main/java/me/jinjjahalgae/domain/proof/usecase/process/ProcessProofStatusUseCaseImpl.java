@@ -29,7 +29,7 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
 
     @Override
     @Transactional
-    public void execute(Long proofId) {
+    public void processProofStatus(Long proofId) {
         try {
             // 존재하는 인증인지 검증
             Proof proof = proofRepository.findById(proofId).orElseThrow(()->

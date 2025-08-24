@@ -19,10 +19,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -77,7 +75,7 @@ class GetContractorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("계약자 인증 목록 조회 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void getContractorProofList_Success() {
         // given
         // 인증 1
         Proof proof1 = ProofTestUtil.createProofBeforeSave("인증1", ProofStatus.REJECTED, contractId, null);
@@ -109,7 +107,7 @@ class GetContractorProofListUseCaseSliceTest {
         savedReProof.addProofImage(savedImage4);
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(2);
@@ -117,21 +115,21 @@ class GetContractorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("사용자의 계약이 아니면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNotUserContract() {
+    void getContractorProofList_ThrowsException_WhenNotUserContract() {
         // given
         Long nonUserContractId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getContractorProofListUseCase.execute(nonUserContractId, year, month, userId))
+        assertThatThrownBy(() -> getContractorProofListUseCase.getContractorProofList(nonUserContractId, year, month, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약입니다.");
     }
 
     @Test
     @DisplayName("인증이 없을 때 빈 리스트 반환 - 슬라이스 테스트")
-    void execute_ReturnsEmptyList_WhenNoProofs() {
+    void getContractorProofList_ReturnsEmptyList_WhenNoProofs() {
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).isEmpty();
@@ -139,7 +137,7 @@ class GetContractorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("재인증이 없는 인증 목록 조회 성공 - 슬라이스 테스트")
-    void execute_Success_WithoutReProofs() {
+    void getContractorProofList_Success_WithoutReProofs() {
         // given
         // 인증 1
         Proof proof1 = ProofTestUtil.createProofBeforeSave("인증1", ProofStatus.APPROVED, contractId, null);
@@ -160,7 +158,7 @@ class GetContractorProofListUseCaseSliceTest {
 
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(2);
@@ -168,7 +166,7 @@ class GetContractorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("다른 달의 인증은 포함되지 않음 - 슬라이스 테스트")
-    void execute_ExcludesProofsFromOtherMonths() {
+    void getContractorProofList_ExcludesProofsFromOtherMonths() {
         // given
         // 이번 달 인증
         Proof proofThisMonth = ProofTestUtil.createProofBeforeSave("이번 달 인증", ProofStatus.APPROVED, contractId, null);
@@ -199,7 +197,7 @@ class GetContractorProofListUseCaseSliceTest {
 
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(1);

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GetAwaitProofUseCase {
 
-    List<ProofAwaitResponse> execute(Long contractId, Long userId);
+    List<ProofAwaitResponse> getAwaitProof(Long contractId, Long userId);
 }

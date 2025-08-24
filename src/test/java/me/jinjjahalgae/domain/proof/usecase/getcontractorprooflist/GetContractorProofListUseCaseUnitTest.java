@@ -48,7 +48,7 @@ class GetContractorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("계약자 인증 목록 조회 성공")
-    void execute_Success() {
+    void getContractorProofList_Success() {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Long> reProofIds = Arrays.asList(4L, 5L);
@@ -70,7 +70,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(proofRepository.findProofsWithProofImagesByIds(reProofIds)).thenReturn(reProofs);
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(3);
@@ -78,19 +78,19 @@ class GetContractorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("사용자의 계약이 아니면 예외 발생")
-    void execute_ThrowsException_WhenNotUserContract() {
+    void getContractorProofList_ThrowsException_WhenNotUserContract() {
         // given
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> getContractorProofListUseCase.execute(contractId, year, month, userId))
+        assertThatThrownBy(() -> getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("인증이 없을 때 빈 리스트 반환")
-    void execute_ReturnsEmptyList_WhenNoProofs() {
+    void getContractorProofList_ReturnsEmptyList_WhenNoProofs() {
         // given
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonth(eq(contractId), any(), any())).thenReturn(List.of());
@@ -98,7 +98,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(proofRepository.findReProofIdsByMonth(eq(contractId), any())).thenReturn(List.of());
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).isEmpty();
@@ -106,7 +106,7 @@ class GetContractorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("재인증이 없는 인증 목록 조회 성공")
-    void execute_Success_WithoutReProofs() {
+    void getContractorProofList_Success_WithoutReProofs() {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
@@ -122,7 +122,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(proofRepository.findProofsWithProofImagesByIds(List.of())).thenReturn(List.of());
 
         // when
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(3);

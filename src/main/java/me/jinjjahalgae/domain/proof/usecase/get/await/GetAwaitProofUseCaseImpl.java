@@ -23,7 +23,7 @@ public class GetAwaitProofUseCaseImpl implements GetAwaitProofUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProofAwaitResponse> execute(Long contractId, Long userId) {
+    public List<ProofAwaitResponse> getAwaitProof(Long contractId, Long userId) {
         // 계약이 존재하는 지 확인
         boolean isContractExist = contractRepository.existsById(contractId);
 

@@ -54,7 +54,7 @@ class GetSupervisorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("감독자 인증 목록 조회 성공")
-    void execute_Success() {
+    void getSupervisorProofList_Success() {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Long> reProofIds = Arrays.asList(4L, 5L);
@@ -83,7 +83,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(feedbacks);
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(3);
@@ -91,19 +91,19 @@ class GetSupervisorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생")
-    void execute_ThrowsException_WhenNotParticipant() {
+    void getSupervisorProofList_ThrowsException_WhenNotParticipant() {
         // given
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> getSupervisorProofListUseCase.execute(contractId, year, month, userId))
+        assertThatThrownBy(() -> getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("인증이 없을 때 빈 리스트 반환")
-    void execute_ReturnsEmptyList_WhenNoProofs() {
+    void getSupervisorProofList_ReturnsEmptyList_WhenNoProofs() {
         // given
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(List.of());
@@ -112,7 +112,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(List.of());
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).isEmpty();
@@ -120,7 +120,7 @@ class GetSupervisorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("재인증이 없는 인증 목록 조회 성공")
-    void execute_Success_WithoutReProofs() {
+    void getSupervisorProofList_Success_WithoutReProofs() {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
@@ -143,7 +143,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(feedbacks);
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(3);
@@ -151,7 +151,7 @@ class GetSupervisorProofListUseCaseUnitTest {
 
     @Test
     @DisplayName("피드백이 없는 인증 목록 조회 성공")
-    void execute_Success_WithoutFeedbacks() {
+    void getSupervisorProofList_Success_WithoutFeedbacks() {
         // given
         List<Long> proofIds = Arrays.asList(1L, 2L, 3L);
         List<Proof> proofs = Arrays.asList(
@@ -168,7 +168,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(List.of());
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId);
 
         // then
         assertThat(result).hasSize(3);

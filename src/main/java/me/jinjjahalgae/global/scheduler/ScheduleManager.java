@@ -40,7 +40,7 @@ public class ScheduleManager {
         verifyOneOffContractSignatureUseCase.verifyOneOffContractSignature();
 
         // 인증 24시간(만료) 체크
-        checkExpiredProofUseCase.execute(Instant.now());
+        checkExpiredProofUseCase.checkExpiredProof(Instant.now());
     }
 
     /**

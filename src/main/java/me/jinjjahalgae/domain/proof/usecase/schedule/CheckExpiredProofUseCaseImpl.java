@@ -37,7 +37,7 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
 
     @Override
     @Transactional
-    public void execute(Instant now) {
+    public void checkExpiredProof(Instant now) {
         Instant deadline = now.minusSeconds(24 * 3600);
 
         int page = 0;

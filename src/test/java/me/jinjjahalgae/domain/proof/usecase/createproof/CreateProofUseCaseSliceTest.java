@@ -13,7 +13,6 @@ import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
 import me.jinjjahalgae.global.exception.AppException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,10 +76,10 @@ class CreateProofUseCaseSliceTest {
 
     @Test
     @DisplayName("인증 생성 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void createProof_Success() {
         // when
         contract.start(3);
-        createProofUseCase.execute(validRequest, contractId, userId);
+        createProofUseCase.createProof(validRequest, contractId, userId);
 
         // then
         List<Proof> proofs = proofRepository.findAll();
@@ -97,52 +96,52 @@ class CreateProofUseCaseSliceTest {
 
     @Test
     @DisplayName("이미지가 없으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNoImage() {
+    void createProof_ThrowsException_WhenNoImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest(null, null, null, null);
 
         // when & then
-        assertThatThrownBy(() -> createProofUseCase.execute(requestWithoutImage, contractId, userId))
+        assertThatThrownBy(() -> createProofUseCase.createProof(requestWithoutImage, contractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("최소 1장 이상의 이미지가 필요합니다.");
     }
 
     @Test
     @DisplayName("계약이 PENDING 상태일 경우 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_ContractPending() {
+    void createProof_ThrowsException_ContractPending() {
         // given
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest("image1.jpg", null, null, null);
 
         // when & then
-        assertThatThrownBy(() -> createProofUseCase.execute(requestWithoutImage, contractId, userId))
+        assertThatThrownBy(() -> createProofUseCase.createProof(requestWithoutImage, contractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약 진행중에만 인증 생성이 가능합니다.");
     }
 
     @Test
     @DisplayName("오늘자 인증이 이미 존재하면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenProofAlreadyExists() {
+    void createProof_ThrowsException_WhenProofAlreadyExists() {
         // given
         contract.start(3);
         Proof existingProof = ProofTestUtil.createProofBeforeSave("기존 인증", ProofStatus.APPROVE_PENDING, contractId, null);
         proofRepository.save(existingProof);
 
         // when & then
-        assertThatThrownBy(() -> createProofUseCase.execute(validRequest, contractId, userId))
+        assertThatThrownBy(() -> createProofUseCase.createProof(validRequest, contractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 날짜에 이미 인증이 존재합니다.");
     }
 
     @Test
     @DisplayName("세 번째 이미지까지 포함한 인증 생성 성공 - 슬라이스 테스트")
-    void execute_Success_WithThirdImage() {
+    void createProof_Success_WithThirdImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
 
         // when
-        createProofUseCase.execute(requestWithThirdImage, contractId, userId);
+        createProofUseCase.createProof(requestWithThirdImage, contractId, userId);
 
         // then
         List<Proof> proofs = proofRepository.findAll();
@@ -154,13 +153,13 @@ class CreateProofUseCaseSliceTest {
 
     @Test
     @DisplayName("첫 번째 이미지만 있는 인증 생성 성공 - 슬라이스 테스트")
-    void execute_Success_WithOnlyFirstImage() {
+    void createProof_Success_WithOnlyFirstImage() {
         // given
         contract.start(3);
         ProofCreateRequest requestWithOnlyFirstImage = new ProofCreateRequest("image1.jpg", null, null, "테스트 코멘트");
 
         // when
-        createProofUseCase.execute(requestWithOnlyFirstImage, contractId, userId);
+        createProofUseCase.createProof(requestWithOnlyFirstImage, contractId, userId);
 
         // then
         List<Proof> proofs = proofRepository.findAll();
@@ -172,12 +171,12 @@ class CreateProofUseCaseSliceTest {
 
     @Test
     @DisplayName("계약이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenContractNotFound() {
+    void createProof_ThrowsException_WhenContractNotFound() {
         // given
         Long nonExistentContractId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> createProofUseCase.execute(validRequest, nonExistentContractId, userId))
+        assertThatThrownBy(() -> createProofUseCase.createProof(validRequest, nonExistentContractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("존재하지 않는 계약입니다.");
     }

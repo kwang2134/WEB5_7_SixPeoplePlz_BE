@@ -22,7 +22,7 @@ public class GetRecentProofUseCaseImpl implements GetRecentProofUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProofRecentResponse> execute(Long contractId, Long userId) {
+    public List<ProofRecentResponse> getRecentProof(Long contractId, Long userId) {
         // 유저의 계약인지 확인
         boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
 

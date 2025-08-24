@@ -26,7 +26,7 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
 
     @Override
     @Transactional(readOnly = true)
-    public List<ContractorProofListResponse> execute(Long contractId, Integer year, Integer month, Long userId) {
+    public List<ContractorProofListResponse> getContractorProofList(Long contractId, Integer year, Integer month, Long userId) {
         // 년, 월 값에 대한 검증
         if(year == null || month == null) {
             throw ErrorCode.INVALID_YEAR_MONTH.domainException("년, 월 값이 비어있거나 올바르지 않습니다.");

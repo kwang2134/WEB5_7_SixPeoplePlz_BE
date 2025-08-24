@@ -24,10 +24,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -109,7 +107,7 @@ class GetSupervisorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("감독자 인증 목록 조회 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void getSupervisorProofList_Success() {
         // given
         // 인증 1
         Proof proof1 = ProofTestUtil.createProofBeforeSave("인증1", ProofStatus.APPROVED, contractId, null);
@@ -171,7 +169,7 @@ class GetSupervisorProofListUseCaseSliceTest {
         savedReProof1.addFeedback(savedFeedback6);
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId1);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId1);
 
         // then
         assertThat(result).hasSize(2);
@@ -180,21 +178,21 @@ class GetSupervisorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNotParticipant() {
+    void getSupervisorProofList_ThrowsException_WhenNotParticipant() {
         // given
         Long nonParticipantUserId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getSupervisorProofListUseCase.execute(contractId, year, month, nonParticipantUserId))
+        assertThatThrownBy(() -> getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, nonParticipantUserId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("인증이 없을 때 빈 리스트 반환 - 슬라이스 테스트")
-    void execute_ReturnsEmptyList_WhenNoProofs() {
+    void getSupervisorProofList_ReturnsEmptyList_WhenNoProofs() {
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId1);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId1);
 
         // then
         assertThat(result).isEmpty();
@@ -203,7 +201,7 @@ class GetSupervisorProofListUseCaseSliceTest {
 
     @Test
     @DisplayName("다른 달의 인증은 포함되지 않음 - 슬라이스 테스트")
-    void execute_ExcludesProofsFromOtherMonths() {
+    void getSupervisorProofList_ExcludesProofsFromOtherMonths() {
         // given
         // 이번 달 인증
         Proof proofThisMonth = ProofTestUtil.createProofBeforeSave("이번 달 인증", ProofStatus.APPROVED, contractId, null);
@@ -241,7 +239,7 @@ class GetSupervisorProofListUseCaseSliceTest {
         feedbackRepository.save(feedback2);
 
         // when
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId1);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId1);
 
         // then
         assertThat(result).hasSize(1);

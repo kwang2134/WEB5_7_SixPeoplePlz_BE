@@ -33,7 +33,7 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
 
     @Override
     @Transactional
-    public void execute(ProofCreateRequest request, Long contractId, Long userId) {
+    public void createProof(ProofCreateRequest request, Long contractId, Long userId) {
         Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 해당하는 계약이 존재하지 않습니다."));
 

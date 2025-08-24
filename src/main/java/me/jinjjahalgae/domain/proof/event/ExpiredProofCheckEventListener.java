@@ -15,6 +15,6 @@ public class ExpiredProofCheckEventListener {
     @Async
     @TransactionalEventListener
     public void handleExpiredProofCheckEvent(ExpiredProofCheckEvent event) {
-        checkExpiredProofUseCase.execute(event.getNow());
+        checkExpiredProofUseCase.checkExpiredProof(event.getNow());
     }
 }

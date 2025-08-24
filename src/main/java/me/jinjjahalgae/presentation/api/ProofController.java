@@ -44,7 +44,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createProof(@RequestBody ProofCreateRequest req, @PathVariable("contractId") Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        createProofUseCase.execute(req, contractId, userId);
+        createProofUseCase.createProof(req, contractId, userId);
         return CommonResponse.success();
     }
 
@@ -53,7 +53,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createReProof(@RequestBody ProofCreateRequest req, @PathVariable("proofId") Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        createReProofUseCase.execute(req, proofId, userId);
+        createReProofUseCase.createReProof(req, proofId, userId);
         return CommonResponse.success();
     }
 
@@ -62,7 +62,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<List<ProofAwaitResponse>> getAwaitProofs(@PathVariable("contractId") Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        List<ProofAwaitResponse> result = getAwaitProofUseCase.execute(contractId, userId);
+        List<ProofAwaitResponse> result = getAwaitProofUseCase.getAwaitProof(contractId, userId);
         return CommonResponse.success(result);
     }
 
@@ -71,7 +71,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<List<ProofRecentResponse>> getRecentProofs(@PathVariable("contractId") Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        List<ProofRecentResponse> result = getRecentProofUseCase.execute(contractId, userId);
+        List<ProofRecentResponse> result = getRecentProofUseCase.getRecentProof(contractId, userId);
         return CommonResponse.success(result);
     }
 
@@ -80,7 +80,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<ProofDetailResponse> getProofDetail(@PathVariable("proofId") Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        ProofDetailResponse result = getProofDetailUseCase.execute(proofId, userId);
+        ProofDetailResponse result = getProofDetailUseCase.getProofDetail(proofId, userId);
         return CommonResponse.success(result);
     }
 
@@ -93,7 +93,7 @@ public class ProofController implements ProofControllerDocs {
                                                                                     @RequestParam(required = false) Integer month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.getContractorProofList(contractId, year, month, userId);
         return CommonResponse.success(result);
     }
 
@@ -105,7 +105,7 @@ public class ProofController implements ProofControllerDocs {
                                                                                     @RequestParam(required = false) Integer month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.getSupervisorProofList(contractId, year, month, userId);
         return CommonResponse.success(result);
     }
 }

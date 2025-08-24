@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,7 +86,7 @@ class GetAwaitProofUseCaseSliceTest {
 
     @Test
     @DisplayName("대기 중인 인증 목록 조회 성공 - 슬라이스 테스트")
-    void execute_Success() {
+    void getAwaitProof_Success() {
         // given
         Proof proof1 = ProofTestUtil.createProofBeforeSave("인증1", ProofStatus.APPROVE_PENDING, contractId, null);
         Proof savedProof1 = proofRepository.save(proof1);
@@ -110,7 +109,7 @@ class GetAwaitProofUseCaseSliceTest {
         savedProof2.addProofImage(savedImage3);
 
         // when
-        List<ProofAwaitResponse> result = getAwaitProofUseCase.execute(contractId, userId);
+        List<ProofAwaitResponse> result = getAwaitProofUseCase.getAwaitProof(contractId, userId);
 
         // then
         assertThat(result).hasSize(2);
@@ -118,21 +117,21 @@ class GetAwaitProofUseCaseSliceTest {
 
     @Test
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenNotParticipant() {
+    void getAwaitProof_ThrowsException_WhenNotParticipant() {
         // given
         Long nonParticipantUserId = 999L;
 
         // when & then
-        assertThatThrownBy(() -> getAwaitProofUseCase.execute(contractId, nonParticipantUserId))
+        assertThatThrownBy(() -> getAwaitProofUseCase.getAwaitProof(contractId, nonParticipantUserId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }
 
     @Test
     @DisplayName("대기 중인 인증이 없을 때 빈 리스트 반환 - 슬라이스 테스트")
-    void execute_ReturnsEmptyList_WhenNoAwaitProofs() {
+    void getAwaitProof_ReturnsEmptyList_WhenNoAwaitProofs() {
         // when
-        List<ProofAwaitResponse> result = getAwaitProofUseCase.execute(contractId, userId);
+        List<ProofAwaitResponse> result = getAwaitProofUseCase.getAwaitProof(contractId, userId);
 
         // then
         assertThat(result).isEmpty();
@@ -140,7 +139,7 @@ class GetAwaitProofUseCaseSliceTest {
 
     @Test
     @DisplayName("승인한(피드백을 준) 인증은 대기 목록에 포함되지 않음 - 슬라이스 테스트")
-    void execute_ExcludesApprovedProofs() {
+    void getAwaitProof_ExcludesApprovedProofs() {
         // given
         Proof approvedProof = ProofTestUtil.createProofBeforeSave("승인된 인증", ProofStatus.APPROVED, contractId, null);
         Proof savedApprovedProof = proofRepository.save(approvedProof);
@@ -169,7 +168,7 @@ class GetAwaitProofUseCaseSliceTest {
         feedbackRepository.save(feedbackPendingProof);
 
         // when
-        List<ProofAwaitResponse> result = getAwaitProofUseCase.execute(contractId, userId);
+        List<ProofAwaitResponse> result = getAwaitProofUseCase.getAwaitProof(contractId, userId);
 
         // then
         assertThat(result).hasSize(1);

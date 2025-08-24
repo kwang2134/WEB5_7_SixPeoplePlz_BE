@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +46,7 @@ class GetProofDetailUseCaseUnitTest {
 
     @Test
     @DisplayName("인증 상세 조회 성공")
-    void execute_Success() {
+    void getProofDetail_Success() {
         // given
         Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime());
 
@@ -55,7 +54,7 @@ class GetProofDetailUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
 
         // when
-        ProofDetailResponse result = getProofDetailUseCase.execute(proofId, userId);
+        ProofDetailResponse result = getProofDetailUseCase.getProofDetail(proofId, userId);
 
         // then
         assertThat(result).isNotNull();
@@ -63,19 +62,19 @@ class GetProofDetailUseCaseUnitTest {
 
     @Test
     @DisplayName("인증이 존재하지 않으면 예외 발생")
-    void execute_ThrowsException_WhenProofNotFound() {
+    void getProofDetail_ThrowsException_WhenProofNotFound() {
         // given
         when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> getProofDetailUseCase.execute(proofId, userId))
+        assertThatThrownBy(() -> getProofDetailUseCase.getProofDetail(proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 인증을 찾을 수 없습니다.");
     }
 
     @Test
     @DisplayName("사용자가 계약의 참여자가 아니면 예외 발생")
-    void execute_ThrowsException_WhenNotParticipant() {
+    void getProofDetail_ThrowsException_WhenNotParticipant() {
         // given
         Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime());
 
@@ -83,7 +82,7 @@ class GetProofDetailUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> getProofDetailUseCase.execute(proofId, userId))
+        assertThatThrownBy(() -> getProofDetailUseCase.getProofDetail(proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
     }

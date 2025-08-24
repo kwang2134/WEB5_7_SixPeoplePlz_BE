@@ -23,6 +23,6 @@ public class HandleProofEventListener {
     @Async
     @TransactionalEventListener
     public void handle(HandleProofEvent event) {
-        processProofStatusUseCase.execute(event.proofId());
+        processProofStatusUseCase.processProofStatus(event.proofId());
     }
 }

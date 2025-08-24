@@ -4,5 +4,5 @@ import java.time.Instant;
 
 public interface CheckExpiredProofUseCase {
 
-    void execute(Instant now);
+    void checkExpiredProof(Instant now);
 }

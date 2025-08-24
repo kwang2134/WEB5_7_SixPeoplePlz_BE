@@ -27,7 +27,7 @@ public class CreatePresignedUrlUseCaseImpl implements CreatePresignedUrlUseCase 
     private String bucket;
 
     @Override
-    public CreatePreSignedUrlResponse execute(CreatePreSignedUrlRequest request) {
+    public CreatePreSignedUrlResponse createPresignedUrl(CreatePreSignedUrlRequest request) {
         // 스토리지에 저장될 파일 고유 키 생성
         String objectKey = createObjectKey(request.fileName());
 

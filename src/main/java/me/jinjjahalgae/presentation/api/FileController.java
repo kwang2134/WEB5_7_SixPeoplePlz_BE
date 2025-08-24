@@ -25,7 +25,7 @@ public class FileController implements FileControllerDocs {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @Valid @RequestBody CreatePreSignedUrlRequest request
     ) {
-        CreatePreSignedUrlResponse result = createPresignedUrlUseCase.execute(request);
+        CreatePreSignedUrlResponse result = createPresignedUrlUseCase.createPresignedUrl(request);
         
         return CommonResponse.success(result);
     }

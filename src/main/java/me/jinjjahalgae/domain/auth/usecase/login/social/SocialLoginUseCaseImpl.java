@@ -35,7 +35,7 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
 
     @Override
     @Transactional
-    public SocialLoginResponse execute(SocialLoginRequest req) {
+    public SocialLoginResponse socialLogin(SocialLoginRequest req) {
         String provider = req.provider();
         String thirdPartyAccessToken = req.accessToken();
         String fcmToken = req.fcmToken();

@@ -39,7 +39,7 @@ public class AuthController implements AuthControllerDocs {
     public CommonResponse<SocialLoginResponse> socialLoginForBody(
             @Valid @RequestBody SocialLoginRequest req
     ) {
-        SocialLoginResponse result = socialLoginUseCase.execute(req);
+        SocialLoginResponse result = socialLoginUseCase.socialLogin(req);
 
         return CommonResponse.success(result);
     }
@@ -51,7 +51,7 @@ public class AuthController implements AuthControllerDocs {
             @Valid @RequestBody SocialLoginRequest req,
             HttpServletResponse servletResponse // 쿠키 담기 위함
     ) {
-        SocialLoginResponse result = socialLoginUseCase.execute(req);
+        SocialLoginResponse result = socialLoginUseCase.socialLogin(req);
 
         int accessTokenMaxAge = (int) jwtProperties.getAccessTokenExpiration().toSeconds();
         int refreshTokenMaxAge = (int) jwtProperties.getRefreshTokenExpiration().toSeconds();
@@ -73,7 +73,7 @@ public class AuthController implements AuthControllerDocs {
     public CommonResponse<Void> logout(
             @AuthenticationPrincipal CustomJwtPrincipal user
     ) {
-        logoutUseCase.execute(user.getUserId());
+        logoutUseCase.logout(user.getUserId());
         
         return CommonResponse.success();
     }
@@ -83,7 +83,7 @@ public class AuthController implements AuthControllerDocs {
     public CommonResponse<RefreshResponse> refresh(
             @Valid @RequestBody RefreshRequest request
     ) {
-        RefreshResponse result = refreshUseCase.execute(request);
+        RefreshResponse result = refreshUseCase.refresh(request);
         
         return CommonResponse.success(result);
     }

@@ -26,7 +26,7 @@ public class RefreshUseCaseImpl implements RefreshUseCase {
 
     @Override
     @Transactional
-    public RefreshResponse execute(RefreshRequest request) {
+    public RefreshResponse refresh(RefreshRequest request) {
         String refreshToken = request.refreshToken();
 
         // userId를 refreshToken에서 추출

@@ -19,7 +19,7 @@ public class LogoutUseCaseImpl implements LogoutUseCase {
 
     @Override
     @Transactional
-    public void execute(Long userId) {
+    public void logout(Long userId) {
         Auth auth = authRepository.findByUserId(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("가입되지 않은 유저가 로그아웃을 시도했음"));
 
